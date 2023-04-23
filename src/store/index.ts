@@ -12,6 +12,11 @@ export const useStore = defineStore('main', {
       stickyTextarea: false,
       autoAlign: false,
     },
+    pageLoading: false,
+    likeCache: {
+      POST: [] as string[],
+      COMMENT: [] as string[],
+    },
   }),
   getters: {
     isMainPage() {

@@ -52,7 +52,7 @@ router.beforeEach(async (to) => {
   if (to.meta.blockAfterLogin && store.login)
     return '/home'
 
-  if (to.path === '/profile')
+  if (to.path === '/user')
     return `/user/${store.uid}`
 
   // store.currentPage = to.name?.toString() || ''

@@ -129,16 +129,26 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'blog',
-        name: 'blog',
-        component: () => import('@/views/public/blog.vue'),
+        name: 'blog-home',
+        component: () => import('@/views/public/blog/home.vue'),
+      },
+      {
+        path: 'blog/post/:pid',
+        name: 'blog-post',
+        component: () => import('@/views/public/blog/post.vue'),
       },
       {
         path: 'user',
-        name: 'user',
+        name: 'user-profile',
         component: () => import('@/views/public/user.vue'),
         meta: {
           requireLogin: true,
         },
+      },
+      {
+        path: 'user/:id',
+        name: 'user',
+        component: () => import('@/views/public/user.vue'),
       },
       {
         path: 'login',
