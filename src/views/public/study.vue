@@ -14,7 +14,7 @@ const chapterContent = ref({
 })
 
 onMounted(async () => {
-  chapters.value = await getChapterList()
+  // chapters.value = await getChapterList()
 })
 
 async function getChapterList() {

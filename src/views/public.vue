@@ -1,0 +1,4 @@
+<template>
+  <GlobalNav />
+  <RouterView />
+</template>

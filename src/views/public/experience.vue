@@ -48,13 +48,13 @@
       </div>
     </div>
     <div
-      class="bg-[#22272e] transition-[width] duration-300 relative overflow-hidden border-l border-[#373e47] text-white p-4"
+      class="bg-[#22272e] transition-[width] duration-300 relative overflow-hidden border-l border-[#373e47] text-white"
       :class="{
         'w-[400px]': showInfoPanel,
         'w-0': !showInfoPanel,
       }"
     >
-      <div v-if="selectIndex !== -1" class="w-[400px]">
+      <div v-if="selectIndex !== -1" class="w-[400px] p-4">
         <button
           class="absolute right-0 top-0 p-2"
           @click="showInfoPanel = false"
