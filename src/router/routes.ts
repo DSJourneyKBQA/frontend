@@ -116,12 +116,12 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/',
-    component: () => import('@/views/public.vue'),
+    component: () => import('@/views/user.vue'),
     children: [
       {
         path: 'home',
         name: 'home',
-        component: () => import('@/views/public/home.vue'),
+        component: () => import('@/views/user/home.vue'),
         meta: {
           title: '首页',
         },
@@ -129,7 +129,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'study',
         name: 'study',
-        component: () => import('@/views/public/study.vue'),
+        component: () => import('@/views/user/study.vue'),
         meta: {
           title: '学习',
           requireLogin: true,
@@ -138,7 +138,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'try',
         name: 'try',
-        component: () => import('@/views/public/try.vue'),
+        component: () => import('@/views/user/try.vue'),
         meta: {
           title: '体验',
           requireLogin: true,
@@ -147,17 +147,17 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'blog',
         name: 'blog-home',
-        component: () => import('@/views/public/blog/home.vue'),
+        component: () => import('@/views/user/blog/home.vue'),
       },
       {
         path: 'blog/post/:pid',
         name: 'blog-post',
-        component: () => import('@/views/public/blog/post.vue'),
+        component: () => import('@/views/user/blog/post.vue'),
       },
       {
         path: 'user',
         name: 'user-profile',
-        component: () => import('@/views/public/user.vue'),
+        component: () => import('@/views/user/user.vue'),
         meta: {
           requireLogin: true,
         },
@@ -165,12 +165,12 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'user/:uid',
         name: 'user',
-        component: () => import('@/views/public/user.vue'),
+        component: () => import('@/views/user/user.vue'),
       },
       {
         path: 'login',
         name: 'login',
-        component: () => import('@/views/public/login.vue'),
+        component: () => import('@/views/user/login.vue'),
       },
     ],
   },

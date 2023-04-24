@@ -65,20 +65,22 @@
         <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click="logs.push(String(wocao++))">
           启动
         </button>
-        <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click=" playHeartbeatAnimation(1, 2);playHeartbeatAnimation(1,3)">
+        <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click=" playHeartbeatAnimation(1, 2);playHeartbeatAnimation(1, 3)">
           关闭
         </button>
         <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click="deleteItem(selectIndex)">
           删除
         </button>
-         <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click="logs = []">
-            清空
-          </button>
+        <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click="logs = []">
+          清空
+        </button>
         <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click="connectGateway">
-            连接网关
+          连接网关
         </button>
         <div class="flex flex-col-reverse">
-          <div v-for="log,index in logs" :key="index">{{ log }}</div>
+          <div v-for="log, index in logs" :key="index">
+            {{ log }}
+          </div>
         </div>
       </div>
     </div>
@@ -86,11 +88,11 @@
 </template>
 
 <script setup lang="ts">
+import { useToast } from 'vue-toastification'
 import { itemTypeList } from '@/config'
 import type { ItemType } from '@/enums'
 import { useStore } from '@/store'
 import { formatTime } from '@/utils'
-import { useToast } from 'vue-toastification'
 
 interface Item {
   id: number
@@ -248,38 +250,36 @@ function deleteItem(index: number) {
   showInfoPanel.value = false
 }
 
-function connectGateway(){
+function connectGateway() {
   const socket = new WebSocket('ws://49.235.92.241:10055/log')
 
-  socket.addEventListener('open', function (event) {
-    logs.value.push(`[${formatTime(Date.now())}] 连接成功`)
-    toast.success('连接成功')
-  });
+  socket.addEventListener('open', () => {
+    logs.value.push(`[${formatTime(Date.now())}] 网关连接成功`)
+    toast.success('网关连接成功')
+  })
 
-  socket.addEventListener('message', function (event) {
+  socket.addEventListener('message', (event) => {
     logs.value.push(`[${formatTime(Date.now())}] ${event.data}`)
     let res
-    try{
+    try {
       res = JSON.parse(event.data)
-    }catch(err){
-      console.log(err)
     }
-    if(res){
-      if(res['op'] === 1){
-
-      }
+    catch (err) {
+      toast.error(`数据解析失败：${event.data}`)
     }
+    if (res) {
+      if (res.op === 1)
+        playHeartbeatAnimation(res.from, res.to)
+    }
+  })
 
-  });
-
-  socket.addEventListener('close', function (event) {
-    logs.value.push(`[${formatTime(Date.now())}] 连接关闭`)
-    console.log(`[${formatTime(Date.now())}] 连接关闭`);
-    toast.error('连接关闭')
-  });
+  socket.addEventListener('close', () => {
+    logs.value.push(`[${formatTime(Date.now())}] 网关连接断开`)
+    toast.error('网关连接断开')
+  })
 }
 
-function playHeartbeatAnimation(from:number,to:number){
+function playHeartbeatAnimation(from: number, to: number) {
   const fromPos = items.value.find(ele => ele.id === from)?.position
   const toPos = items.value.find(ele => ele.id === to)?.position
   if (fromPos === undefined || toPos === undefined)
@@ -289,14 +289,14 @@ function playHeartbeatAnimation(from:number,to:number){
   <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
 </svg>`
   ele.className = `heartbeat-${+heartbeatInc++} absolute transition-all duration-1000 ease-in-out w-[20px] h-[20px] text-red-500`
-  ele.style.transform = `translate(${fromPos.x * 20+10}px, ${fromPos.y * 20+10}px)`
+  ele.style.transform = `translate(${fromPos.x * 20 + 10}px, ${fromPos.y * 20 + 10}px)`
   canvasEl.value?.appendChild(ele)
   setTimeout(() => {
-    ele.style.transform = `translate(${toPos.x * 20+10}px, ${toPos.y * 20+10}px)`
-  }, 100);
+    ele.style.transform = `translate(${toPos.x * 20 + 10}px, ${toPos.y * 20 + 10}px)`
+  }, 100)
   setTimeout(() => {
     ele.remove()
-  }, 1100);
+  }, 1100)
 }
 
 watchEffect(() => {

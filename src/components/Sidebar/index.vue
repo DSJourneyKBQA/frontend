@@ -11,7 +11,8 @@
         class="absolute w-[40px] top-2 right-[-40px] shadow-md p-2 rounded-r-lg bg-white cursor-pointer"
         @click="showSidebar = !showSidebar"
       >
-        <IconArrowRight class="w-6 h-6" />
+        <IconArrowLeft v-if="showSidebar" class="w-6 h-6" />
+        <IconArrowRight v-else class="w-6 h-6" />
       </div>
       <h2 class="text-2xl font-bold">
         学习目录

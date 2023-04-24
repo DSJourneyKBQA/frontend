@@ -26,7 +26,7 @@
   }
 
   ol {
-    @apply list-decimal list-inside;
+    @apply list-decimal list-inside pl-2;
   }
 
   li>ol {
@@ -34,7 +34,7 @@
   }
 
   ul {
-    @apply list-disc list-inside;
+    @apply list-disc list-inside pl-2;
   }
 
   table {

@@ -1,14 +1,20 @@
 <template>
   <div class="w-full lg:w-[700px] xl:w-[1024px] mx-auto">
     <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4 relative">
-      <div class="absolute top-4 right-4" v-if="enableEditMode">
-        <CommonButton @click="handleGoAdmin">进入后台</CommonButton>
-        <CommonButton class="ml-1" @click="handleLogout">退出登录</CommonButton>
+      <div v-if="enableEditMode" class="absolute top-4 right-4">
+        <CommonButton @click="handleGoAdmin">
+          进入后台
+        </CommonButton>
+        <CommonButton class="ml-1" @click="handleLogout">
+          退出登录
+        </CommonButton>
       </div>
       <h2>{{ enableEditMode ? '我的' : '用户' }}信息</h2>
       <slot name="loading" />
       <template v-if="!userProfile">
-        <div class="text-center">加载中</div>
+        <div class="text-center">
+          加载中
+        </div>
       </template>
       <template v-else>
         <div class="flex flex-col w-full items-center">
@@ -18,42 +24,47 @@
           <div class="mt-2">
             <span class="mr-2 text-sm bg-yellow-300 px-1 py-0.5 rounded-md">uid:{{ userProfile?.uid }}</span>
             <span class="mr-2 text-sm bg-red-300 px-1 py-0.5 rounded-md">用户组:{{ userProfile?.role }}</span>
-            <span class="mr-2 text-sm bg-red-500 px-1 py-0.5 rounded-md text-white"
-              v-if="userProfile.status !== 0">用户已被封禁</span>
+            <span
+              v-if="userProfile.status !== 0"
+              class="mr-2 text-sm bg-red-500 px-1 py-0.5 rounded-md text-white"
+            >用户已被封禁</span>
           </div>
         </div>
       </template>
     </div>
-    <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4" v-if="enableEditMode">
+    <div v-if="enableEditMode" class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4">
       <!-- <NewPost :data="newPostParams" @new-post="handleNewPost" /> -->
     </div>
     <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-2">
       <h2>{{ enableEditMode ? '我的' : '用户' }}文章</h2>
-      <div class="text-center pb-4" v-if="userPosts.length == 0">
+      <div v-if="userPosts.length === 0" class="text-center pb-4">
         <span>这里还什么都没有呢</span>
       </div>
       <template v-else>
-        <PostPreviewUser v-for="post in userPosts" :post-data="post" :edit-mode="enableEditMode"
-          @delete="handleDeletePost" />
-        <CommonPagination :current-page="currentPage" :total-count="postCount" :page-size="pageSize"
-          @change="handlePageChange" />
+        <PostPreviewUser
+          v-for="post in userPosts" :key="post.pid"
+          :post-data="post" :edit-mode="enableEditMode"
+          @delete="handleDeletePost"
+        />
+        <CommonPagination
+          :current-page="currentPage" :total-count="postCount" :page-size="pageSize"
+          @change="handlePageChange"
+        />
       </template>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, toRefs, watchEffect } from 'vue';
-import { useToast } from 'vue-toastification';
-import { useRoute, useRouter } from 'vue-router';
+import { computed, onMounted, ref, toRefs, watchEffect } from 'vue'
+import { useToast } from 'vue-toastification'
+import { useRoute, useRouter } from 'vue-router'
 import NProgress from 'nprogress'
-import { pageSize } from '@/config';
-import { useStore } from '@/store';
-import { getInfo } from '@/api/user';
-import { NewPostData, PostData, UserProfile } from '@/types';
-import { deletePost, getList, newPost } from '@/api/post';
-// import UserProfilePost from '@cp/post/UserProfilePost.vue';
-// import NewPost from '@cp/post/NewPost.vue';
+import { pageSize } from '@/config'
+import { useStore } from '@/store'
+import { getInfo } from '@/api/user'
+import type { NewPostData, PostData, UserProfile } from '@/types'
+import { deletePost, getList, newPost } from '@/api/post'
 
 const store = useStore()
 const route = useRoute()
@@ -69,20 +80,20 @@ const newPostParams = ref<NewPostData>({ title: '', content: '' })
 const currentPage = ref(1)
 const postCount = ref(0)
 
-const enableEditMode = computed(() => login.value && userId.value == String(store.uid))
+const enableEditMode = computed(() => login.value && userId.value === String(store.uid))
 
 watchEffect(() => {
   if (params.value.uid) {
     // to.params.uid 可能为 undefined
-    userId.value = String(params.value.uid);
+    userId.value = String(params.value.uid)
     fetchData()
   }
 })
 
 onMounted(() => {
-  if (route.query.page) {
+  if (route.query.page)
     currentPage.value = Number(route.query.page)
-  }
+
   fetchData()
 })
 
@@ -99,12 +110,12 @@ async function fetchData() {
       userPostsPromise,
     ])
     .then(([profile, posts]) => {
-      userProfile.value = profile['userInfo']
-      userPosts.value = posts['posts']
-      postCount.value = posts['count']
-      document.title = userProfile.value?.nickname + '的主页 - 分布式学习系统'
+      userProfile.value = profile.userInfo
+      userPosts.value = posts.posts
+      postCount.value = posts.count
+      document.title = `${userProfile.value?.nickname}的主页 - 分布式学习系统`
     })
-    .catch(err => {
+    .catch((err) => {
       toast.error(err.message)
     })
     .finally(() => {
@@ -115,11 +126,11 @@ async function fetchData() {
 
 async function handleNewPost() {
   // 发布文章
-  if (newPostParams.value.title.trim() == '') {
+  if (newPostParams.value.title.trim() === '') {
     toast.warning('文章标题不可为空')
     return
   }
-  if (newPostParams.value.content.trim() == '') {
+  if (newPostParams.value.content.trim() === '') {
     toast.warning('文章内容不可为空')
     return
   }
@@ -131,8 +142,8 @@ async function handleNewPost() {
       fetchData()
     })
     .catch((err) => {
-      toast.error('发布失败: ' + err)
-    });
+      toast.error(`发布失败: ${err}`)
+    })
 }
 
 async function handleDeletePost(pid: number) {
@@ -143,8 +154,8 @@ async function handleDeletePost(pid: number) {
       fetchData()
     })
     .catch((err) => {
-      toast.error('删除失败: ' + err.message)
-    });
+      toast.error(`删除失败: ${err.message}`)
+    })
 }
 
 function handleGoAdmin() {
@@ -167,5 +178,4 @@ function handlePageChange(page: number) {
   router.push({ query: { page } })
   fetchData()
 }
-
 </script>
