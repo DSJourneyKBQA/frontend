@@ -17,6 +17,8 @@ declare module '@vue/runtime-core' {
     CommonSwitch: typeof import('./src/components/Common/switch.vue')['default']
     EditorMarkdown: typeof import('./src/components/Editor/markdown.vue')['default']
     EditorNormal: typeof import('./src/components/Editor/normal.vue')['default']
+    IconArrowLeft: typeof import('./src/components/Icon/arrow/left.vue')['default']
+    IconArrowRight: typeof import('./src/components/Icon/arrow/right.vue')['default']
     IconComment: typeof import('./src/components/Icon/comment.vue')['default']
     IconComputer: typeof import('./src/components/Icon/computer.vue')['default']
     IconConfig: typeof import('./src/components/Icon/config.vue')['default']

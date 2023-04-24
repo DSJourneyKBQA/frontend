@@ -2,7 +2,7 @@
   <div class="w-full lg:w-[700px] xl:w-[1024px] mx-auto">
     <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4 relative">
       <div class="absolute top-4 right-4" v-if="enableEditMode">
-        <CommonButton click="handleGoAdmin">进入后台</CommonButton>
+        <CommonButton @click="handleGoAdmin">进入后台</CommonButton>
         <CommonButton class="ml-1" @click="handleLogout">退出登录</CommonButton>
       </div>
       <h2>{{ enableEditMode ? '我的' : '用户' }}信息</h2>
@@ -50,7 +50,7 @@ import NProgress from 'nprogress'
 import { pageSize } from '@/config';
 import { useStore } from '@/store';
 import { getInfo } from '@/api/user';
-import { newPostData, PostData, UserProfile } from '@/types';
+import { NewPostData, PostData, UserProfile } from '@/types';
 import { deletePost, getList, newPost } from '@/api/post';
 // import UserProfilePost from '@cp/post/UserProfilePost.vue';
 // import NewPost from '@cp/post/NewPost.vue';
@@ -65,7 +65,7 @@ const { params } = toRefs(route)
 const userId = ref(String(route.params.uid))
 const userProfile = ref<UserProfile | null>()
 const userPosts = ref<PostData[]>([])
-const newPostParams = ref<newPostData>({ title: '', content: '' })
+const newPostParams = ref<NewPostData>({ title: '', content: '' })
 const currentPage = ref(1)
 const postCount = ref(0)
 

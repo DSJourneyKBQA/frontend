@@ -53,9 +53,24 @@ export interface UserProfile {
   avatar: string
 }
 
-export interface newPostData {
+export interface NewPostData {
   title: string
   content: string
+}
+
+export interface ChapterData {
+  id: number
+  name: string
+  status: boolean
+  children: any[]
+}
+
+export interface ChapterContentData {
+  cid: number
+  title: string
+  description: string
+  content: string
+
 }
 
 export interface AdminUserData {

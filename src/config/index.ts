@@ -1,7 +1,7 @@
 import { ItemType } from '@/enums'
 
-export const baseURL = 'https://blog-server-api.amarea.cn'
-// export const baseURL = 'http://localhost:3000'
+// export const baseURL = 'https://blog-server-api.amarea.cn'
+export const baseURL = 'http://localhost:3000'
 export const imageUploadApiURL = 'https://img.amarea.cn/api/v1/upload'
 
 export const frontendRepo = 'https://github.com/OriLight152/blog-frontend'
@@ -37,6 +37,11 @@ export const adminSideBarItem = {
       name: 'dashboard',
       to: '/dashboard',
       display: '仪表盘',
+    },
+    {
+      name: 'chapter-manage',
+      to: '/chapter-manage',
+      display: '学习管理',
     },
     {
       name: 'user-manage',

@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { version as versionVue } from 'vue'
-import { backendRepo, frontendRepo } from '@/constants/config'
+import { backendRepo, frontendRepo } from '@/config'
 import { formatTime } from '@/utils'
 
 const commitHash = window.__BUILD_COMMIT__ || 'dev'

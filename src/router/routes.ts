@@ -6,6 +6,10 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     redirect: '/home',
   },
+  {
+    path: '/admin',
+    redirect: '/admin/home',
+  },
   // 路由项
   {
     path: '/admin',
@@ -53,6 +57,15 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/admin/dashboard.vue'),
         meta: {
           title: '仪表盘 - 管理后台',
+          requireAdmin: true,
+        },
+      },
+      {
+        path: 'chapter-manage',
+        name: 'chapter-manage',
+        component: () => import('@/views/admin/chapter-manage.vue'),
+        meta: {
+          title: '学习设置 - 管理后台',
           requireAdmin: true,
         },
       },

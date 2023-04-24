@@ -1,5 +1,4 @@
 <template>
-  <div>user-setting</div>
   <div>
     <p class="mb-4 text-2xl font-bold">
       用户设置

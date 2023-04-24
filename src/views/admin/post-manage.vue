@@ -69,7 +69,7 @@ import { RouterLink } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import NProgress from 'nprogress'
 import { allowPostComment, deletePost, getPostList, prohibitPostComment } from '@/api/admin'
-import { pageSize } from '@/config/config'
+import { pageSize } from '@/config'
 import { useStore } from '@/store'
 import type { AdminPostData } from '@/types'
 

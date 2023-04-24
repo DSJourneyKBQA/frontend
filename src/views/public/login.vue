@@ -133,7 +133,7 @@ async function handleLogin() {
       // store.likeCache = { "POST": [], "COMMENT": [] }
       localStorage.setItem('uid', res['id'])
       localStorage.setItem('token', res['token'])
-      router.push('/profile')
+      router.push('/user')
     })
     .catch((err: any) => {
       toast.error('登录失败：' + err)

@@ -21,7 +21,6 @@ import { PostData } from '@/types';
 import NProgress from 'nprogress'
 import { getList } from '@/api/post';
 import { pageSize } from '@/config';
-import { useStore } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute()
