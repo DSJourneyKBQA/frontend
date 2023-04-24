@@ -109,21 +109,25 @@ const routes: RouteRecordRaw[] = [
         path: 'home',
         name: 'home',
         component: () => import('@/views/public/home.vue'),
-
+        meta: {
+          title: '首页',
+        },
       },
       {
         path: 'study',
         name: 'study',
         component: () => import('@/views/public/study.vue'),
         meta: {
+          title: '学习',
           requireLogin: true,
         },
       },
       {
-        path: 'experience',
-        name: 'experience',
-        component: () => import('@/views/public/experience.vue'),
+        path: 'try',
+        name: 'try',
+        component: () => import('@/views/public/try.vue'),
         meta: {
+          title: '体验',
           requireLogin: true,
         },
       },
@@ -146,7 +150,7 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'user/:id',
+        path: 'user/:uid',
         name: 'user',
         component: () => import('@/views/public/user.vue'),
       },

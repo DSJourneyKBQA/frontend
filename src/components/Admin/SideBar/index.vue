@@ -25,7 +25,7 @@
 import { onMounted, ref, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '@/store'
-import { adminSideBarItem } from '@/constants/config'
+import { adminSideBarItem } from '@/config/config'
 
 const store = useStore()
 const router = useRouter()

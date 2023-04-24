@@ -44,7 +44,7 @@ import { useToast } from 'vue-toastification'
 import { useStore } from '@/store'
 import { edit, getImageUploadToken, getInfo } from '@/api/user'
 import type { UserProfile } from '@/types'
-import { imageUploadApiURL } from '@/constants/config'
+import { imageUploadApiURL } from '@/config'
 
 const store = useStore()
 const toast = useToast()

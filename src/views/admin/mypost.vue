@@ -53,7 +53,7 @@ import { onMounted, ref } from 'vue'
 import { useStore } from '@/store'
 import { deletePost, getList } from '@/api/post'
 import type { PostData } from '@/types'
-import { pageSize } from '@/constants/config'
+import { pageSize } from '@/config/config'
 
 const store = useStore()
 const toast = useToast()

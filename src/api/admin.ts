@@ -5,19 +5,19 @@ export function getDashboardData(token: string): any {
     url: '/admin/getDashboardData',
     method: 'post',
     data: {
-      token
-    }
+      token,
+    },
   })
 }
 
-export function getUserList(token: string, page: number = 1): any {
+export function getUserList(token: string, page = 1): any {
   return request({
     url: '/admin/getUserList',
     method: 'post',
     data: {
       token,
-      page
-    }
+      page,
+    },
   })
 }
 
@@ -27,8 +27,8 @@ export function deleteUser(token: string, uid: number): any {
     method: 'post',
     data: {
       token,
-      uid
-    }
+      uid,
+    },
   })
 }
 
@@ -38,8 +38,8 @@ export function banUser(token: string, uid: number): any {
     method: 'post',
     data: {
       token,
-      uid
-    }
+      uid,
+    },
   })
 }
 
@@ -49,20 +49,20 @@ export function unbanUser(token: string, uid: number): any {
     method: 'post',
     data: {
       token,
-      uid
-    }
+      uid,
+    },
   })
 }
 
-export function getPostList(token: string, page: number = 1, uid: number = 0): any {
+export function getPostList(token: string, page = 1, uid = 0): any {
   return request({
     url: '/admin/getPostList',
     method: 'post',
     data: {
       token,
       page,
-      uid
-    }
+      uid,
+    },
   })
 }
 
@@ -72,8 +72,8 @@ export function deletePost(token: string, pid: number): any {
     method: 'post',
     data: {
       token,
-      pid
-    }
+      pid,
+    },
   })
 }
 
@@ -83,8 +83,8 @@ export function allowPostComment(token: string, pid: number): any {
     method: 'post',
     data: {
       token,
-      pid
-    }
+      pid,
+    },
   })
 }
 
@@ -94,19 +94,19 @@ export function prohibitPostComment(token: string, pid: number): any {
     method: 'post',
     data: {
       token,
-      pid
-    }
+      pid,
+    },
   })
 }
 
-export function getCommentList(token: string, page: number = 1): any {
+export function getCommentList(token: string, page = 1): any {
   return request({
     url: '/admin/getCommentList',
     method: 'post',
     data: {
       token,
-      page
-    }
+      page,
+    },
   })
 }
 
@@ -116,8 +116,8 @@ export function deleteComment(token: string, cid: number): any {
     method: 'post',
     data: {
       token,
-      cid
-    }
+      cid,
+    },
   })
 }
 
@@ -127,8 +127,8 @@ export function banComment(token: string, cid: number): any {
     method: 'post',
     data: {
       token,
-      cid
-    }
+      cid,
+    },
   })
 }
 
@@ -138,7 +138,7 @@ export function approveComment(token: string, cid: number): any {
     method: 'post',
     data: {
       token,
-      cid
-    }
+      cid,
+    },
   })
 }

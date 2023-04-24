@@ -4,7 +4,7 @@
       关于
     </p>
     <p class="font-bold text-4xl mb-4">
-      Ori博客
+      分布式学习系统
     </p>
     <p><strong>程序版本：</strong><a :href="`${frontendRepo}/tree/${commitHash}`">{{ commitHash }}</a></p>
     <p><strong>构建时间：</strong>{{ buildTime === 'dev' ? 'dev' : formatTime(buildTime) }}</p>

@@ -9,7 +9,7 @@ import NormalButton from './common/button/NormalButton.vue';
         <!-- <NormalButton class="lg:hidden" icon>
           <IconMenu class="w-4 h-4" />
         </NormalButton> -->
-        Ori博客 - 管理后台
+        分布式学习系统 - 管理后台
       </div>
       <div>
         <CommonButton icon @click="$router.push('/profile')">

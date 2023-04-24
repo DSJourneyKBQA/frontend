@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w-full lg:w-[700px] xl:w-[1024px] mx-auto">
     <div class="w-full my-10 flex justify-center" v-if="loading">
       <IconLoading class="w-20 h-20" />
     </div>
@@ -20,7 +20,7 @@ import { onMounted, ref } from 'vue';
 import { PostData } from '@/types';
 import NProgress from 'nprogress'
 import { getList } from '@/api/post';
-import { pageSize } from '@/constants/config';
+import { pageSize } from '@/config';
 import { useStore } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 

@@ -13,7 +13,7 @@ const router = createRouter({
 router.beforeEach(async (to) => {
   const store = useStore()
   if (to.meta.title)
-    document.title = `${to.meta.title as string} - Ori博客`
+    document.title = `${to.meta.title as string} - 分布式学习系统`
 
   if (!store.login) {
     const token = localStorage.getItem('token')

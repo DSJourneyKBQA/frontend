@@ -1,7 +1,7 @@
 <template>
   <div class="h-[60px] z-50">
     <div
-      class="w-full h-[60px] fixed top-0 left-0 shadow-sm flex justify-between z-50"
+      class="w-full h-[60px] fixed top-0 left-0 shadow-md flex justify-between z-50"
       :class="{
         'bg-white': navTheme === 'light',
         'bg-[#2d333b] text-white': navTheme === 'dark',
@@ -18,7 +18,7 @@
             学习
           </div>
         </RouterLink>
-        <RouterLink to="/experience">
+        <RouterLink to="/try">
           <div class="leading-[60px] px-10 inline-block hover:bg-gray-500/20 transition-colors">
             体验
           </div>

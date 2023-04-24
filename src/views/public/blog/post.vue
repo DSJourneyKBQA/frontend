@@ -1,8 +1,9 @@
 <template>
-  <div class="flex justify-center w-full">
-    <!-- <SideBarPostTOC :content="postData.text" v-if="postData" /> -->
+  <div class="w-full lg:w-[700px] xl:w-[1024px] mx-auto">
     <div class="w-full">
-      <slot name="loading" />
+      <div class="w-full my-10 flex justify-center" v-if="loading">
+        <IconLoading class="w-20 h-20" />
+      </div>
       <Transition name="popup-t">
         <div class="w-full my-2 overflow-hidden bg-white rounded-md" v-if="postData">
           <div class="px-8 pt-4">
@@ -113,6 +114,7 @@ const commentData = ref<CommentData[]>([])
 const newCommentContent = ref('')
 const replyTo = ref(0)
 const likeStatus = ref(false)
+const loading = ref(false)
 
 const allowComment = computed(() => postData.value && postData.value.allowComment === 1)
 
@@ -145,7 +147,7 @@ onMounted(() => {
 async function fetchData() {
   // 获取文章数据
   NProgress.start()
-  store.pageLoading = true
+  loading.value = true
   const postDataPromise = getPost(Number(pid))
   const commentDataPromise = getComment(Number(pid))
   return Promise
@@ -156,14 +158,14 @@ async function fetchData() {
     .then(([post, comment]) => {
       postData.value = post['post']
       commentData.value = comment['comments']
-      document.title = postData.value?.title + ' - ' + postData.value?.user.nickname + ' - Ori博客'
+      document.title = postData.value?.title + ' - ' + postData.value?.user.nickname + ' - 分布式学习系统'
     })
     .catch(err => {
       toast.error(err.message)
     })
     .finally(() => {
       NProgress.done()
-      store.pageLoading = false
+      loading.value = false
     })
 }
 

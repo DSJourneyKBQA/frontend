@@ -1,6 +1,6 @@
 <template>
   <div
-    class="cursor-pointer hover:bg-white/20 w-fit p-1 absolute border transition-colors"
+    class="cursor-pointer hover:bg-white/20 w-fit p-1 absolute border transition-colors z-10"
     :class="{
       'border-white/60': select,
       'border-transparent': !select,

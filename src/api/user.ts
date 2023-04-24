@@ -9,8 +9,8 @@ export function register(username: string, nickname: string, password: string, e
       nickname,
       password,
       email,
-      sex
-    }
+      sex,
+    },
   })
 }
 
@@ -20,8 +20,8 @@ export function login(username: string, password: string): any {
     method: 'post',
     data: {
       username,
-      password
-    }
+      password,
+    },
   })
 }
 
@@ -31,8 +31,8 @@ export function verify(token: string, uid: number) {
     method: 'post',
     data: {
       uid,
-      token
-    }
+      token,
+    },
   })
 }
 
@@ -41,8 +41,8 @@ export function getInfo(uid: number): any {
     url: '/user/getInfo',
     method: 'get',
     params: {
-      uid
-    }
+      uid,
+    },
   })
 }
 
@@ -51,8 +51,8 @@ export function edit(token: string, nickname: string | null = null, password: st
     url: '/user/edit',
     method: 'post',
     data: {
-      token, nickname, password, avatar
-    }
+      token, nickname, password, avatar,
+    },
   })
 }
 
@@ -61,7 +61,7 @@ export function getImageUploadToken(token: string): any {
     url: '/user/getImageUploadToken',
     method: 'post',
     data: {
-      token
-    }
+      token,
+    },
   })
 }

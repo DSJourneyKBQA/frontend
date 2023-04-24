@@ -74,7 +74,7 @@ import { RouterLink } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import NProgress from 'nprogress'
 import { banUser, deleteUser, getUserList, unbanUser } from '@/api/admin'
-import { pageSize } from '@/constants/config'
+import { pageSize } from '@/config/config'
 import { useStore } from '@/store'
 import type { AdminUserData } from '@/types'
 

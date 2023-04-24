@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 
-export function getList(page: number = 1, uid: number | null = null): any {
+export function getList(page = 1, uid: number | null = null): any {
   return request({
     url: '/post/getList',
     method: 'get',
     params: {
       page,
-      uid
-    }
+      uid,
+    },
   })
 }
 
@@ -23,8 +23,8 @@ export function getPost(pid: number): any {
     url: '/post/getPost',
     method: 'get',
     params: {
-      pid
-    }
+      pid,
+    },
   })
 }
 
@@ -35,8 +35,8 @@ export function newPost(token: string, title: string, text: string) {
     data: {
       token,
       title,
-      text
-    }
+      text,
+    },
   })
 }
 
@@ -48,8 +48,8 @@ export function editPost(token: string, pid: number, title: string, text: string
       token,
       pid,
       title,
-      text
-    }
+      text,
+    },
   })
 }
 
@@ -59,8 +59,8 @@ export function deletePost(token: string, pid: number) {
     method: 'post',
     data: {
       token,
-      pid
-    }
+      pid,
+    },
   })
 }
 
@@ -69,8 +69,8 @@ export function getComment(pid: number): any {
     url: '/post/getComment',
     method: 'get',
     params: {
-      pid
-    }
+      pid,
+    },
   })
 }
 
@@ -83,8 +83,8 @@ export function newComment(token: string, pid: number, text: string, agent: stri
       pid,
       text,
       agent,
-      replyTo
-    }
+      replyTo,
+    },
   })
 }
 
@@ -95,8 +95,8 @@ export function submitLike(token: string, type: string, sid: number) {
     data: {
       token,
       type,
-      sid
-    }
+      sid,
+    },
   })
 }
 
@@ -107,7 +107,7 @@ export function cancelLike(token: string, type: string, sid: number) {
     data: {
       token,
       type,
-      sid
-    }
+      sid,
+    },
   })
 }
