@@ -142,3 +142,13 @@ export function approveComment(token: string, cid: number): any {
     },
   })
 }
+
+export function getChapterData(token: string): any {
+  return request({
+    url: '/admin/getChapterData',
+    method: 'post',
+    data: {
+      token,
+    },
+  })
+}

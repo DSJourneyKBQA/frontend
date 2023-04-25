@@ -65,7 +65,7 @@ const routes: RouteRecordRaw[] = [
         name: 'chapter-manage',
         component: () => import('@/views/admin/chapter-manage.vue'),
         meta: {
-          title: '学习设置 - 管理后台',
+          title: '学习章节管理 - 管理后台',
           requireAdmin: true,
         },
       },

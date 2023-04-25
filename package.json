@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/language": "^6.6.0",
+    "@codemirror/legacy-modes": "^6.3.2",
     "@vueuse/core": "^10.1.0",
     "axios": "^1.3.6",
     "codemirror": "^6.0.1",

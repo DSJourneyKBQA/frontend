@@ -26,6 +26,7 @@
           v-for="item, index in items" :key="index"
           :index="index"
           :type="item.type"
+          :status="item.status"
           :position="item.position"
           :select="item.select"
           :class="{
@@ -50,11 +51,11 @@
     <div
       class="bg-[#22272e] transition-[width] duration-300 relative overflow-hidden border-l border-[#373e47] text-white"
       :class="{
-        'w-[800px]': showInfoPanel,
+        'w-[1200px]': showInfoPanel,
         'w-0': !showInfoPanel,
       }"
     >
-      <div v-if="selectIndex !== -1" class="w-[800px] h-full p-4 overflow-x-hidden overflow-y-auto">
+      <div v-if="selectIndex !== -1" class="w-[1200px] h-full p-4 overflow-x-hidden overflow-y-auto">
         <button
           class="absolute right-0 top-0 p-2"
           @click="showInfoPanel = false"
@@ -62,7 +63,7 @@
           x
         </button>
         <div>当前选中项目：ID：{{ items[selectIndex].id }}, 类型：{{ items[selectIndex].type }}</div>
-        <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click="logs.push(String(wocao++))">
+        <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md">
           启动
         </button>
         <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click=" playHeartbeatAnimation(1, 2);playHeartbeatAnimation(1, 3)">
@@ -76,6 +77,9 @@
         </button>
         <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click="connectGateway">
           连接网关
+        </button>
+        <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click="disconnectGateway ">
+          断开网关
         </button>
         <div class="flex flex-col-reverse">
           <div v-for="log, index in logs" :key="index">
@@ -98,6 +102,7 @@ interface Item {
   id: number
   type: ItemType
   title: string
+  status: 0 | 1 | 2
   position: {
     x: number
     y: number
@@ -112,7 +117,6 @@ const dragging = ref(false)
 const dragIndex = ref(-1)
 const draggingToolbarItem = ref(false)
 const logs = ref<string[]>([])
-const wocao = ref(1)
 
 const canvasEl = ref<HTMLDivElement>()
 const boxSelectionConfig = ref({
@@ -134,6 +138,8 @@ const configLoaded = ref(false)
 let idInc = 0
 let heartbeatInc = 0
 
+let socket: WebSocket
+
 onMounted(() => {
   items.value = JSON.parse(localStorage.getItem('items') || '[]')
   configLoaded.value = true
@@ -149,6 +155,7 @@ function addItem(type: ItemType, initPosition: { x: number; y: number } = { x: 5
     id: idInc++,
     type,
     title: '服务器',
+    status: 0,
     position: {
       x: initPosition.x,
       y: initPosition.y,
@@ -251,7 +258,7 @@ function deleteItem(index: number) {
 }
 
 function connectGateway() {
-  const socket = new WebSocket('ws://49.235.92.241:10055/log')
+  socket = new WebSocket('ws://49.235.92.241:10055/log')
 
   socket.addEventListener('open', () => {
     logs.value.push(`[${formatTime(Date.now())}] 网关连接成功`)
@@ -259,24 +266,49 @@ function connectGateway() {
   })
 
   socket.addEventListener('message', (event) => {
-    logs.value.push(`[${formatTime(Date.now())}] ${event.data}`)
-    let res
+    let res: any
     try {
       res = JSON.parse(event.data)
+      logs.value.push(`[${timestampToTime(Date.now())}][${timestampToTime(res.Time)}] ${event.data} `)
     }
     catch (err) {
       toast.error(`数据解析失败：${event.data}`)
     }
     if (res) {
-      if (res.op === 1)
-        playHeartbeatAnimation(res.from, res.to)
+      if (res.Logtype === 'HeartBeat')
+        playHeartbeatAnimation(res.From + 1, res.To + 1)
+      if (res.Logtype === 'StartSucess') {
+        const r = items.value.find(ele => ele.id === res.From + 1)
+        if (r)
+          r.status = 1
+      }
     }
   })
 
   socket.addEventListener('close', () => {
-    logs.value.push(`[${formatTime(Date.now())}] 网关连接断开`)
-    toast.error('网关连接断开')
+    logs.value.push(`[${formatTime(Date.now())}] 网关连接失败`)
+    toast.error('网关连接失败')
+    socket.removeEventListener('open', () => { })
+    socket.removeEventListener('message', () => { })
+    socket.removeEventListener('close', () => { })
   })
+}
+
+function timestampToTime(timestamp: number) {
+  // let date = new Date(timestamp * 1000); // 10位时间戳
+  const date = new Date(timestamp) // 13位时间戳
+  const Y = `${date.getFullYear()}-`
+  const M = `${date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1}-`
+  const D = `${date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()} `
+  const h = `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:`
+  const m = `${date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()}:`
+  const s = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds()
+  const ms = date.getMilliseconds()
+  return `${Y + M + D + h + m + s}.${ms}`
+}
+
+function disconnectGateway() {
+  socket.close()
 }
 
 function playHeartbeatAnimation(from: number, to: number) {

@@ -7,7 +7,6 @@ export function getChapterList(token: string, uid: number): any {
     data: {
       token,
       uid,
-
     },
   })
 }
@@ -18,6 +17,18 @@ export function getChapterContent(id: number): any {
     method: 'get',
     params: {
       id,
+    },
+  })
+}
+
+export function submitTest(token: string, questionId: number, content: string): any {
+  return request({
+    url: '/study/submitTest',
+    method: 'post',
+    data: {
+      token,
+      questionId,
+      content,
     },
   })
 }

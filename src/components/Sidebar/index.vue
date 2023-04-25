@@ -6,14 +6,14 @@
       'w-[300px]': showSidebar,
     }"
   >
-    <div class="w-[300px] h-full p-4 absolute right-0 top-0">
-      <div
-        class="absolute w-[40px] top-2 right-[-40px] shadow-md p-2 rounded-r-lg bg-white cursor-pointer"
-        @click="showSidebar = !showSidebar"
-      >
-        <IconArrowLeft v-if="showSidebar" class="w-6 h-6" />
-        <IconArrowRight v-else class="w-6 h-6" />
-      </div>
+    <div
+      class="absolute w-[40px] top-2 right-[-40px] shadow-md p-2 rounded-r-lg bg-white cursor-pointer"
+      @click="showSidebar = !showSidebar"
+    >
+      <IconArrowLeft v-if="showSidebar" class="w-6 h-6" />
+      <IconArrowRight v-else class="w-6 h-6" />
+    </div>
+    <div class="w-[300px] h-full p-4 absolute right-0 top-0 overflow-y-auto">
       <h2 class="text-2xl font-bold">
         学习目录
       </h2>
@@ -60,6 +60,9 @@ const currentChapter = ref('')
 const showSidebar = ref(true)
 
 const handleChangeChapter = (chapterCode: string, chapterId: number) => {
+  if (chapterId === -1)
+    return
+
   currentChapter.value = chapterCode
   emits('changeChapter', chapterId)
 }

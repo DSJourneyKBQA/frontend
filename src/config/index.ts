@@ -41,7 +41,7 @@ export const adminSideBarItem = {
     {
       name: 'chapter-manage',
       to: '/chapter-manage',
-      display: '学习管理',
+      display: '学习章节管理',
     },
     {
       name: 'user-manage',

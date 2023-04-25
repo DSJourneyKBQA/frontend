@@ -3,6 +3,16 @@
 </template>
 
 <style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 /* 页面切换过渡 */
 .page-in-enter-active,
 .page-in-leave-active {

@@ -1,0 +1,113 @@
+<template>
+  <div class="w-full h-full flex flex-col">
+    <p class="font-bold text-xl">
+      智能问答
+    </p>
+    <div class="bg-gray-200 flex-1 mt-2 mb-4 rounded-md p-2">
+      <template v-for="msg in msgList">
+        <div v-if="msg.sender === 'bot'" :key="msg.createdAt" class="flex flex-row mb-2 justify-start">
+          <img :src="msg.user.avatar" class="w-8 h-8 rounded-sm mr-2 shadow-md">
+          <div class="mr-10">
+            <p class="text-sm">
+              {{ msg.user.nickname }} <span class="text-gray-400 text-[10px]">{{
+                timestampToTime(msg.createdAt)
+              }}</span>
+            </p>
+            <div class="text-base w-fit rounded-md rounded-tl-none px-2 py-1 bg-white shadow-sm select-text">
+              {{ msg.text }}
+            </div>
+          </div>
+        </div>
+        <div v-if="msg.sender === 'user'" :key="msg.createdAt" class="flex flex-row mb-2 justify-end ">
+          <div class="ml-10">
+            <p class="text-right">
+              <span class="text-gray-400 text-[10px]">{{
+                timestampToTime(msg.createdAt)
+              }}</span>
+            </p>
+            <div class="text-sm float-right w-fit rounded-md rounded-tr-none px-2 py-1 bg-blue-500 text-white shadow-sm select-text">
+              {{ msg.text }}
+            </div>
+          </div>
+          <img :src="msg.user.avatar" class="w-8 h-8 rounded-sm ml-2 shadow-md">
+        </div>
+      </template>
+    </div>
+    <div class="flex">
+      <input v-model="question" type="text" class="flex-1 outline-none px-2 hover:border-b focus:border-b focus:border-b-gray-400 transition-all" placeholder="请输入你的问题">
+      <button class="px-4 py-1 ml-2 rounded-md bg-blue-500 text-white" @click="submitQuestion">
+        提交
+      </button>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import axios from 'axios'
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
+
+const question = ref('')
+const msgList = ref([
+  {
+    sender: 'bot',
+    user: {
+      avatar: 'https://icdn.amarea.cn/upload/2023/01/63b8320ddad73.webp',
+      nickname: 'ChatBot',
+    },
+    text: '你好呀，我是分布式学习问答机器人，很高兴认识你',
+    createdAt: Date.now(),
+  }])
+
+function timestampToTime(timestamp: number) {
+  // let date = new Date(timestamp * 1000); // 10位时间戳
+  const date = new Date(timestamp) // 13位时间戳
+  const Y = `${date.getFullYear()}-`
+  const M = `${date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1}-`
+  const D = `${date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()} `
+  const h = `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:`
+  const m = `${date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()}:`
+  const s = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds()
+  return Y + M + D + h + m + s
+}
+
+function submitQuestion() {
+  if (question.value.trim() === '') {
+    toast.warning('问题不能为空')
+    return
+  }
+  msgList.value.push({
+    sender: 'user',
+    user: {
+      avatar: 'https://icdn.amarea.cn/upload/2023/01/63b8320ddad73.webp',
+      nickname: '用户',
+    },
+    text: question.value,
+    createdAt: Date.now(),
+  })
+  getAnswer(question.value)
+  question.value = ''
+}
+
+async function getAnswer(question: string) {
+  axios.post('http://localhost:3001/api/answer', {
+    question,
+  }, {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+    .then((res) => {
+      msgList.value.push({
+        sender: 'bot',
+        user: {
+          avatar: 'https://icdn.amarea.cn/upload/2023/01/63b8320ddad73.webp',
+          nickname: 'ChatBot',
+        },
+        text: res.data.msg,
+        createdAt: Date.now(),
+      })
+    })
+}
+</script>

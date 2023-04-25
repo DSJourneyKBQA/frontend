@@ -11,7 +11,13 @@
     @mousedown.prevent.stop="$emit('dragStart', index, $event)"
     @click.stop="$emit('select', index)"
   >
-    <IconDynamic :type="type" class="w-8 h-8 text-white" />
+    <IconDynamic
+      :type="type" class="w-8 h-8" :class="{
+        'text-white': status === 0,
+        'text-green-500': status === 1,
+        'text-red-500': status === 2,
+      }"
+    />
   </div>
 </template>
 
@@ -21,6 +27,7 @@ import type { ItemType } from '@/enums'
 defineProps<{
   index: number
   type: ItemType
+  status: 0 | 1 | 2
   position: {
     x: number
     y: number
