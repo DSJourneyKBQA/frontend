@@ -31,7 +31,7 @@ const classList = computed(() => {
     classes.push('p-1')
 
   else
-    classes.push('px-6 py-1 mb-1')
+    classes.push('px-6 py-1')
 
   return classes
 })

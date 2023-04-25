@@ -33,14 +33,14 @@
         </div>
         <div
           v-for="child, cidx in chapter.children" :key="child.name"
-          class="pl-4"
+          class="pl-4 cursor-pointer"
           :class="{
             'text-blue-500': currentChapter === `${idx}_${cidx}`,
             'text-black': currentChapter !== `${idx}_${cidx}`,
           }"
           @click="handleChangeChapter(`${idx}_${cidx}`, child.id)"
         >
-          {{ child.name }}
+          {{ child.name + (child.status ? '（已完成）' : '') }}
         </div>
       </div>
     </div>

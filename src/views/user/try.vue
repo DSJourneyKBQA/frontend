@@ -142,6 +142,9 @@ let socket: WebSocket
 
 onMounted(() => {
   items.value = JSON.parse(localStorage.getItem('items') || '[]')
+  items.value.forEach((item) => {
+    item.status = 0
+  })
   configLoaded.value = true
   store.navTheme = 'dark'
 })

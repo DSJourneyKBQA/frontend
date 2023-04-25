@@ -152,3 +152,41 @@ export function getChapterData(token: string): any {
     },
   })
 }
+
+export function updateChapterData(token: string, data: string): any {
+  return request({
+    url: '/admin/updateChapterData',
+    method: 'post',
+    data: {
+      token,
+      data,
+    },
+  })
+}
+
+export function initChapter(token: string, title: string, description: string, content: string): any {
+  return request({
+    url: '/admin/initChapter',
+    method: 'post',
+    data: {
+      token,
+      title,
+      description,
+      content,
+    },
+  })
+}
+
+export function editChapter(token: string, cid: number, title: string, description: string, content: string): any {
+  return request({
+    url: '/admin/editChapter',
+    method: 'post',
+    data: {
+      token,
+      cid,
+      title,
+      description,
+      content,
+    },
+  })
+}

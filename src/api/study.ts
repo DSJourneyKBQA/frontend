@@ -32,3 +32,14 @@ export function submitTest(token: string, questionId: number, content: string): 
     },
   })
 }
+
+export async function completeChapter(token: string, chapterId: number): Promise<any> {
+  return request({
+    url: '/study/completeChapter',
+    method: 'post',
+    data: {
+      token,
+      cid: chapterId,
+    },
+  })
+}

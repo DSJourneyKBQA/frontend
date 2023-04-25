@@ -1,8 +1,11 @@
 <template>
   <div class="w-full h-full flex flex-col">
-    <p class="font-bold text-xl">
-      智能问答
-    </p>
+    <div class="flex justify-between">
+      <p class="font-bold text-xl">
+        智能问答
+      </p>
+      <IconClose class="w-5 h-5 cursor-pointer" @click.stop="$emit('close')" />
+    </div>
     <div class="bg-gray-200 flex-1 mt-2 mb-4 rounded-md p-2">
       <template v-for="msg in msgList">
         <div v-if="msg.sender === 'bot'" :key="msg.createdAt" class="flex flex-row mb-2 justify-start">
@@ -45,6 +48,8 @@
 <script setup lang="ts">
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
+
+defineEmits(['close'])
 
 const toast = useToast()
 

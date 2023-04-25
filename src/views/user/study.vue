@@ -10,14 +10,20 @@
           {{ chapterContent.description }}
         </div>
         <div class="rendered" v-html="renderMarkdown(chapterContent.content)" />
+        <div class="my-1">
+          <CommonButton primary @click="handleCompleteChapter">
+            完成本章学习
+          </CommonButton>
+        </div>
       </div>
       <div v-else class="text-center">
         请选择章节
       </div>
     </div>
     <div
-      class="flex-1 h-full flex flex-col border-l" :class="{
-
+      class="h-full flex flex-col border-l transition-all" :class="{
+        'flex-1': showCodeEditor,
+        'w-0': !showCodeEditor,
       }"
     >
       <div class="h-[60%] overflow-y-auto">
@@ -25,7 +31,7 @@
           <div class="p-2 border-r">
             代码编辑器
           </div>
-          <div class="p-2 border-l hover:bg-gray-200 cursor-pointer">
+          <div class="p-2 border-l hover:bg-gray-200 cursor-pointer" @click="showCodeEditor = false">
             <IconClose class="w-5 h-5 inline-block" />
           </div>
         </div>
@@ -57,7 +63,14 @@
         <textarea v-model="codeRunResult" class="w-full h-full resize-none outline-none p-2" readonly />
       </div>
     </div>
-    <div class="absolute right-4 bottom-4">
+    <div class="absolute right-4 bottom-4 flex flex-col items-end">
+      <div
+        v-if="!showCodeEditor"
+        class="p-4 border shadow-lg bg-white rounded-[66px] w-[66px] h-[66px] hover:bg-gray-200 cursor-pointer transition-all duration-300 overflow-hidden mb-2"
+        @click="showCodeEditor = true"
+      >
+        <IconEdit class="w-8 h-8 text-blue-500" />
+      </div>
       <div
         class="p-4 border shadow-lg bg-white transition-all duration-300 overflow-hidden"
         :class="{
@@ -66,7 +79,7 @@
         }"
         @click="showQABot = true"
       >
-        <KBQA v-if="showQABot" class="" />
+        <KBQA v-if="showQABot" @close="showQABot = false" />
         <IconChat v-if="!showQABot" class="w-8 h-8 text-blue-500" />
       </div>
     </div>
@@ -79,7 +92,7 @@ import { Codemirror } from 'vue-codemirror'
 import { StreamLanguage } from '@codemirror/language'
 import { go } from '@codemirror/legacy-modes/mode/go'
 import { useToast } from 'vue-toastification'
-import { getChapterContent, getChapterList, submitTest } from '@/api/study'
+import { completeChapter, getChapterContent, getChapterList, submitTest } from '@/api/study'
 import { useStore } from '@/store'
 import type { ChapterContentData, ChapterData } from '@/types'
 import { renderMarkdown } from '@/utils'
@@ -95,6 +108,7 @@ const selectQuestionId = ref(2)
 const code = ref('')
 const codeRunResult = ref('')
 const showQABot = ref(false)
+const showCodeEditor = ref(false)
 
 onMounted(async () => {
   fetchData()
@@ -117,7 +131,7 @@ function handleChapterData(data: any): ChapterData[] {
     chapter.status = true
     chapter.children.forEach((ele: any) => {
       const status = userStatus.find((v: any) =>
-        v.id === ele.id,
+        v.cid === ele.id,
       )
       if (status) {
         ele.status = true
@@ -149,6 +163,20 @@ function runTest() {
       codeRunResult.value = JSON.stringify(res)
     })
     .catch((err: Error) => {
+      toast.error(err.message)
+    })
+}
+
+function handleCompleteChapter() {
+  if (!chapterContent.value) {
+    toast.warning('请先选择章节')
+    return
+  }
+  completeChapter(store.token, chapterContent.value.cid)
+    .then((res: any) => {
+      toast.success('恭喜你完成本章学习')
+    })
+    .catch((err) => {
       toast.error(err.message)
     })
 }

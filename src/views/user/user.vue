@@ -33,7 +33,7 @@
       </template>
     </div>
     <div v-if="enableEditMode" class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4">
-      <!-- <NewPost :data="newPostParams" @new-post="handleNewPost" /> -->
+      <PostNew :data="newPostParams" @new-post="handleNewPost" />
     </div>
     <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-2">
       <h2>{{ enableEditMode ? '我的' : '用户' }}文章</h2>
@@ -135,7 +135,7 @@ async function handleNewPost() {
     return
   }
   newPost(store.token, newPostParams.value.title.trim(), newPostParams.value.content.trim())
-    .then((result) => {
+    .then((res) => {
       toast.success('发布成功')
       newPostParams.value.title = ''
       newPostParams.value.content = ''
@@ -149,7 +149,7 @@ async function handleNewPost() {
 async function handleDeletePost(pid: number) {
   // 删除文章
   deletePost(store.token, pid)
-    .then((result) => {
+    .then((res) => {
       toast.success('删除成功')
       fetchData()
     })
