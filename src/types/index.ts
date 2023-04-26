@@ -131,7 +131,7 @@ export interface AdminCommentData {
 }
 
 export interface CanvasItem {
-  id: number
+  id: string
   type: ItemType
   title: string
   status: 0 | 1 | 2 | 3 // 0:未开启 1:正常 2:异常 3:收到心跳
@@ -140,4 +140,7 @@ export interface CanvasItem {
     y: number
   }
   select: boolean
+  address: string
+  sid: number
+  gid: number
 }
