@@ -59,7 +59,7 @@
         </td>
       </tr>
     </table>
-    <Pagination :current-page="currentPage" :total-count="postCount" :page-size="pageSize" @change="handlePageChange" />
+    <CommonPagination :current-page="currentPage" :total-count="postCount" :page-size="pageSize" @change="handlePageChange" />
   </div>
 </template>
 

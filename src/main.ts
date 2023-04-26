@@ -1,5 +1,5 @@
 import { createPinia } from 'pinia'
-import toast from 'vue-toastification'
+import toast, { POSITION } from 'vue-toastification'
 import App from '@/App.vue'
 import router from '@/router'
 
@@ -12,6 +12,8 @@ const app = createApp(App)
 
 app.use(router)
 app.use(createPinia())
-app.use(toast)
+app.use(toast, {
+  position: POSITION.TOP_CENTER,
+})
 
 app.mount('#app')

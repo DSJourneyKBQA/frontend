@@ -4,3 +4,8 @@ export enum ItemType {
   ConfigServer = 'config',
   Client = 'client',
 }
+
+export enum ServerType {
+  ConfigServer = 'configserver',
+  StorageServer = 'sharedserver',
+}

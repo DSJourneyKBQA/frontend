@@ -27,7 +27,7 @@ import type { ItemType } from '@/enums'
 defineProps<{
   index: number
   type: ItemType
-  status: 0 | 1 | 2
+  status: 0 | 1 | 2 | 3 // 0:未开启 1:正常 2:异常 3:收到心跳
   position: {
     x: number
     y: number

@@ -127,6 +127,14 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: 'roadmap',
+        name: 'roadmap',
+        component: () => import('@/views/user/roadmap.vue'),
+        meta: {
+          title: '学习路线图',
+        },
+      },
+      {
         path: 'study',
         name: 'study',
         component: () => import('@/views/user/study.vue'),

@@ -4,7 +4,7 @@
       <div class="bg-[#22272e] w-[60px] h-full shrink-0 border-r border-[#373e47]">
         <TryToolBarItem
           v-for="itemType in itemTypeList" :key="itemType.value"
-          title="服务器"
+          :title="itemType.label"
           @dblclick="addItem(itemType.value)"
           @mousedown="draggingToolbarItem = true"
           @mouseup="draggingToolbarItem = false"
@@ -15,13 +15,28 @@
       </div>
       <div
         ref="canvasEl"
-        class="bg-[#1c2128] flex-1 h-full overflow-hidden"
+        class="bg-[#1c2128] flex-1 h-full overflow-hidden relative"
         @dblclick="boxSelectionCancel"
         @mousedown="boxSelectionStart"
         @mouseup="dragEnd"
         @mouseleave="dragEnd"
         @mousemove="dragMove"
       >
+        <div class="absolute right-2 top-2" @mousedown.stop="null">
+          <div
+            class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
+            @click="items = []"
+          >
+            <IconRefresh class="w-6 h-6" />
+          </div>
+          <div
+            v-if="items.filter((item) => item.select).length !== 0"
+            class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
+            @click="deleteSelectedItems"
+          >
+            <IconTrash class="w-6 h-6" />
+          </div>
+        </div>
         <TryCanvasItem
           v-for="item, index in items" :key="index"
           :index="index"
@@ -40,8 +55,8 @@
           v-show="boxSelectionConfig.enable"
           class="absolute bg-transparent border border-white/50 select-none"
           :style="{
-            left: `${boxSelectionConfig.width > 0 ? boxSelectionConfig.x : boxSelectionConfig.x + boxSelectionConfig.width}px`,
-            top: `${boxSelectionConfig.height > 0 ? boxSelectionConfig.y : boxSelectionConfig.y + boxSelectionConfig.height}px`,
+            left: `${(boxSelectionConfig.width > 0 ? boxSelectionConfig.x : boxSelectionConfig.x + boxSelectionConfig.width) - 60}px`,
+            top: `${(boxSelectionConfig.height > 0 ? boxSelectionConfig.y : boxSelectionConfig.y + boxSelectionConfig.height) - 60}px`,
             width: `${Math.abs(boxSelectionConfig.width)}px`,
             height: `${Math.abs(boxSelectionConfig.height)}px`,
           }"
@@ -51,18 +66,18 @@
     <div
       class="bg-[#22272e] transition-[width] duration-300 relative overflow-hidden border-l border-[#373e47] text-white"
       :class="{
-        'w-[1200px]': showInfoPanel,
+        'w-[400px]': showInfoPanel,
         'w-0': !showInfoPanel,
       }"
     >
-      <div v-if="selectIndex !== -1" class="w-[1200px] h-full p-4 overflow-x-hidden overflow-y-auto">
+      <div v-if="selectIndex !== -1" class="w-[400px] h-full p-4 overflow-x-hidden overflow-y-auto">
         <button
           class="absolute right-0 top-0 p-2"
           @click="showInfoPanel = false"
         >
           x
         </button>
-        <div>当前选中项目：ID：{{ items[selectIndex].id }}, 类型：{{ items[selectIndex].type }}</div>
+        <div>ID：{{ items[selectIndex].id }}, 类型：{{ items[selectIndex].type }}</div>
         <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md">
           启动
         </button>
@@ -75,12 +90,34 @@
         <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click="logs = []">
           清空
         </button>
-        <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click="connectGateway">
-          连接网关
-        </button>
-        <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click="disconnectGateway ">
-          断开网关
-        </button>
+        <div v-if=" items[selectIndex].type === ItemType.GatewayServer">
+          <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click=" connectGateway ">
+            连接网关
+          </button>
+          <button class="border px-2 py-0.5 mr-2 my-1 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md" @click=" disconnectGateway ">
+            断开网关
+          </button>
+          连接地址：<input v-model=" gatewayServerIp " type="text" class="bg-transparent">
+        </div>
+
+        <div v-if=" items[selectIndex].type === ItemType.ConfigServer">
+          路由表：
+          <div>
+            <div v-for="i in 15" :key="i" class="w-4 h-4 bg-white inline-block mx-0.5 text-black leading-4 text-center">
+              1
+            </div>
+          </div>
+          Group: 1
+          <div class="border w-fit p-1">
+            <div v-for=" server, index in ['127.0.0.1:9088', '127.0.0.1:9099', '127.0.0.1:9100'] " :key=" index ">
+              {{ server }}
+            </div>
+          </div>
+        </div>
+
+        <div v-if=" items[selectIndex].type === ItemType.StorageServer ">
+          连接地址：<input v-model=" gatewayServerIp " type="text" class="bg-transparent">
+        </div>
         <div class="flex flex-col-reverse">
           <div v-for="log, index in logs" :key="index">
             {{ log }}
@@ -94,25 +131,15 @@
 <script setup lang="ts">
 import { useToast } from 'vue-toastification'
 import { itemTypeList } from '@/config'
-import type { ItemType } from '@/enums'
+import { ItemType } from '@/enums'
 import { useStore } from '@/store'
 import { formatTime } from '@/utils'
+import type { CanvasItem } from '@/types'
 
-interface Item {
-  id: number
-  type: ItemType
-  title: string
-  status: 0 | 1 | 2
-  position: {
-    x: number
-    y: number
-  }
-  select: boolean
-}
 const store = useStore()
 const toast = useToast()
 
-const items = ref<Item[]>([])
+const items = ref<CanvasItem[]>([])
 const dragging = ref(false)
 const dragIndex = ref(-1)
 const draggingToolbarItem = ref(false)
@@ -131,6 +158,7 @@ const selectIndex = ref(-1)
 
 const prePosition = ref<{ x: number; y: number }[]>([])
 const mousePosition = ref({ x: 0, y: 0 })
+const gatewayServerIp = ref('127.0.0.1')
 
 const showInfoPanel = ref(false)
 const configLoaded = ref(false)
@@ -153,7 +181,19 @@ onUnmounted(() => {
   store.navTheme = 'light'
 })
 
-function addItem(type: ItemType, initPosition: { x: number; y: number } = { x: 5, y: 5 }) {
+function addItem(type: ItemType, initPosition: { x: number; y: number } = { x: 5, y: 5 }): boolean {
+  if (type === ItemType.GatewayServer) {
+    if (items.value.find(item => item.type === ItemType.GatewayServer)) {
+      toast.error('只能添加一个网关服务器')
+      return false
+    }
+  }
+  if (type === ItemType.Client) {
+    if (items.value.find(item => item.type === ItemType.Client)) {
+      toast.error('只能添加一个客户端')
+      return false
+    }
+  }
   items.value.push({
     id: idInc++,
     type,
@@ -165,6 +205,7 @@ function addItem(type: ItemType, initPosition: { x: number; y: number } = { x: 5
     },
     select: false,
   })
+  return true
 }
 
 function boxSelectionStart(e: MouseEvent) {
@@ -197,7 +238,11 @@ function dragAddItem(type: ItemType, e: MouseEvent) {
     x: Math.ceil((e.clientX - bounding.left - 20) / 20),
     y: Math.ceil((e.clientY - bounding.top - 20) / 20),
   }
-  addItem(type, startPos)
+  if (!addItem(type, startPos)) {
+    dragEnd()
+    return
+  }
+
   dragStart(items.value.length - 1, e)
   draggingToolbarItem.value = false
 }
@@ -261,7 +306,7 @@ function deleteItem(index: number) {
 }
 
 function connectGateway() {
-  socket = new WebSocket('ws://49.235.92.241:10055/log')
+  socket = new WebSocket(`ws://${gatewayServerIp.value}/log`)
 
   socket.addEventListener('open', () => {
     logs.value.push(`[${formatTime(Date.now())}] 网关连接成功`)
@@ -332,6 +377,10 @@ function playHeartbeatAnimation(from: number, to: number) {
   setTimeout(() => {
     ele.remove()
   }, 1100)
+}
+
+function deleteSelectedItems() {
+  items.value = items.value.filter(ele => !ele.select)
 }
 
 watchEffect(() => {

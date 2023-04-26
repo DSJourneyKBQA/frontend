@@ -10,3 +10,5 @@ export function getChapterList(token: string, uid: number): any {
     },
   })
 }
+
+// export function startServer(server:string, type:)

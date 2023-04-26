@@ -1,3 +1,5 @@
+import type { ItemType } from '@/enums'
+
 export interface PostData {
   pid: number
   title: string
@@ -126,4 +128,16 @@ export interface AdminCommentData {
     pid: number
     title: string
   }
+}
+
+export interface CanvasItem {
+  id: number
+  type: ItemType
+  title: string
+  status: 0 | 1 | 2 | 3 // 0:未开启 1:正常 2:异常 3:收到心跳
+  position: {
+    x: number
+    y: number
+  }
+  select: boolean
 }
