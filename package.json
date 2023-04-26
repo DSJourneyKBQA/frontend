@@ -18,6 +18,7 @@
     "highlight.js": "^11.7.0",
     "lodash": "^4.17.21",
     "marked": "4.2.4",
+    "nanoid": "^4.0.2",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.34",
     "vue": "^3.2.45",
