@@ -441,8 +441,11 @@ function connectGateway() {
       if (res.Logtype === 'HeartBeat')
         playHeartbeatAnimation(Number(res.From), Number(res.To))
       if (res.Logtype === 'StartSucess') {
-        if (res.SvrType === 'configserver')
-          configServers.value.find(ele => ele.sid === Number(res.From)).status = 1
+        if (res.SvrType === 'configserver') {
+          const item = configServers.value.find(ele => ele.sid === Number(res.From))
+          if (item)
+            item.status = 1
+        }
       }
     }
   })
