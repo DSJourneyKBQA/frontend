@@ -55,7 +55,7 @@ class Particle {
   color: string
   a: number
   s: number
-  constructor(canvas: CanvasRenderingContext2D, options: any) {
+  constructor(canvas: CanvasRenderingContext2D) {
     const colors = ['#feea00', '#a9df85', '#5dc0ad', '#ff9a00', '#fa3f20']
     const types = ['full', 'fill', 'empty']
     this.random = Math.random()
@@ -148,6 +148,8 @@ function popolate(num: number) {
       (function (x) {
         return function () {
           // Add particle
+          if (!canvas)
+            return
           particles.push(new Particle(canvas))
         }
       }(i))
@@ -166,9 +168,11 @@ function clear() {
 }
 
 function connection() {
-  let old_element = null
+  let old_element: any = null
   particles.forEach((element, index) => {
     if (index > 0) {
+      if (!canvas)
+        return
       const box1 = old_element.getCoordinates()
       const box2 = element.getCoordinates()
       canvas.beginPath()
@@ -187,7 +191,7 @@ function connection() {
 function update() {
   clear()
   connection()
-  particles = particles.filter((p) => { return p.move() })
+  particles = particles.filter(p => p.move())
   if (time_to_recreate) {
     if (particles.length < init_num)
       popolate(1)

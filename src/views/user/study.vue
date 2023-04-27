@@ -1,5 +1,5 @@
 <template>
-  <div v-if="false" class="flex h-[calc(100vh-60px)] overflow-hidden">
+  <div class="flex h-[calc(100vh-60px)] overflow-hidden">
     <Sidebar :data="chapters" @change-chapter="handleChangeChapter" />
     <div class="flex-1 p-4 h-full overflow-y-auto">
       <div v-if="chapterContent" class="px-8">
@@ -84,7 +84,7 @@
       </div>
     </div>
   </div>
-  <div class="p-8">
+  <!-- <div class="p-8">
     <div class="text-3xl font-bold py-4">
       选择学习章节
     </div>
@@ -114,7 +114,7 @@
         {{ chapter.name }}
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script setup  lang="ts">
