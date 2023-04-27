@@ -31,6 +31,7 @@ declare module '@vue/runtime-core' {
     IconLikeOutline: typeof import('./src/components/Icon/like/outline.vue')['default']
     IconLikeSolid: typeof import('./src/components/Icon/like/solid.vue')['default']
     IconLoading: typeof import('./src/components/Icon/loading.vue')['default']
+    IconMail: typeof import('./src/components/Icon/mail.vue')['default']
     IconPlay: typeof import('./src/components/Icon/play.vue')['default']
     IconRefresh: typeof import('./src/components/Icon/refresh.vue')['default']
     IconReturn: typeof import('./src/components/Icon/return.vue')['default']

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-[calc(100vh-60px)] overflow-hidden">
+  <div v-if="false" class="flex h-[calc(100vh-60px)] overflow-hidden">
     <Sidebar :data="chapters" @change-chapter="handleChangeChapter" />
     <div class="flex-1 p-4 h-full overflow-y-auto">
       <div v-if="chapterContent" class="px-8">
@@ -84,6 +84,37 @@
       </div>
     </div>
   </div>
+  <div class="p-8">
+    <div class="text-3xl font-bold py-4">
+      选择学习章节
+    </div>
+    <div class="text-2xl font-bold my-3">
+      初识分布式
+    </div>
+    <div class="flex flex-wrap">
+      <div
+        v-for="chapter, index in chapters" :key="index"
+        class="relative border w-[200px] h-[300px] flex justify-center items-center m-4 bg-white rounded-xl shadow-xl hover:text-white hover:shadow-2xl hover:-translate-y-2 text-xl hover:text-3xl transition-all duration-300 cursor-pointer overflow-hidden"
+        :class="colors[index % colors.length]"
+      >
+        <div class="z-10">
+          {{ chapter.name }}
+        </div>
+        <div class="absolute w-full h-full bg-transparent hover:bg-black/40 transition-colors duration-300 z-0" />
+      </div>
+    </div>
+    <div class="text-2xl font-bold my-3">
+      初识分布式
+    </div>
+    <div class="flex flex-wrap">
+      <div
+        v-for="chapter, index in chapters" :key="index"
+        class="border w-[200px] h-[300px] flex justify-center items-center m-4 bg-white rounded-xl shadow-xl hover:shadow-2xl hover:-translate-y-2 text-xl hover:text-3xl transition-all duration-300 cursor-pointer"
+      >
+        {{ chapter.name }}
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup  lang="ts">
@@ -100,6 +131,7 @@ import { renderMarkdown } from '@/utils'
 const store = useStore()
 const toast = useToast()
 
+const colors = ['bg-red-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500', 'bg-indigo-500', 'bg-purple-500', 'bg-pink-500']
 const extensions = [StreamLanguage.define(go)]
 
 const chapters = ref<ChapterData[]>([])
@@ -173,7 +205,7 @@ function handleCompleteChapter() {
     return
   }
   completeChapter(store.token, chapterContent.value.cid)
-    .then((res: any) => {
+    .then(() => {
       toast.success('恭喜你完成本章学习')
     })
     .catch((err) => {

@@ -12,10 +12,13 @@
     @click.stop="$emit('select', index)"
   >
     <IconDynamic
-      :type="type" class="w-8 h-8" :class="{
+      :type="type" class="w-8 h-8 transition-transform duration-150"
+      :class="{
         'text-white': status === 0,
         'text-green-500': status === 1,
         'text-red-500': status === 2,
+        'text-green-500 scale-[120%]': status === 3,
+        'text-[#92e251]': status === 4,
       }"
     />
   </div>
@@ -27,7 +30,7 @@ import type { ItemType } from '@/enums'
 defineProps<{
   index: number
   type: ItemType
-  status: 0 | 1 | 2 | 3 // 0:未开启 1:正常 2:异常 3:收到心跳
+  status: 0 | 1 | 2 | 3 | 4 // 0:未开启 1:正常 2:异常 3:收到心跳
   position: {
     x: number
     y: number

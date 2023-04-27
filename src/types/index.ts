@@ -134,7 +134,7 @@ export interface CanvasItem {
   id: string
   type: ItemType
   title: string
-  status: 0 | 1 | 2 | 3 // 0:未开启 1:正常 2:异常 3:收到心跳
+  status: 0 | 1 | 2 | 3 | 4 // 0:未开启 1:正常 2:异常 3:收到心跳
   position: {
     x: number
     y: number
