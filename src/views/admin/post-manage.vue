@@ -28,12 +28,12 @@
       </tr>
       <tr v-for="post in postList" :key="post.pid">
         <td>
-          <RouterLink :to="`/post/${post.pid}`">
+          <RouterLink :to="`/blog/post/${post.pid}`">
             {{ post.pid }}
           </RouterLink>
         </td>
         <td class="whitespace-nowrap">
-          <RouterLink :to="`/post/${post.pid}`">
+          <RouterLink :to="`/blog/post/${post.pid}`">
             {{ post.title }}
           </RouterLink>
         </td>

@@ -78,7 +78,7 @@
       <div class="font-bold my-1">
         章节内容
       </div>
-      <EditorMarkdown v-model="newChapter.content" class="h-[400px]" />
+      <EditorMarkdown v-model="newChapter.content" class="!h-[400px]" />
       <div class="my-2">
         <CommonButton primary @click="handleInitChapter">
           初始化
@@ -103,7 +103,7 @@
       <div class="font-bold my-1">
         章节内容
       </div>
-      <EditorMarkdown v-model="newChapter.content" class="h-[400px]" />
+      <EditorMarkdown v-model="newChapter.content" class="!h-[400px]" />
       <div class="my-2">
         <CommonButton primary @click="handleEditChapter">
           保存

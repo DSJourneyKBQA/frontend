@@ -12,7 +12,7 @@
       内容
     </p>
     <EditorNormal v-if="setting.legacyEditor" v-model="data.content" />
-    <EditorMarkdown v-else v-model="data.content" class="h-[400px]" />
+    <EditorMarkdown v-else v-model="data.content" class="!h-[400px]" />
     <CommonButton class="mt-2" primary @click="$emit('newPost')">
       发布
     </CommonButton>

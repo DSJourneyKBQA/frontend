@@ -39,7 +39,7 @@
           {{ `${comment.user.nickname}(${comment.user.uid})` }}
         </td>
         <td class="whitespace-nowrap">
-          <RouterLink :to="`/post/${comment.post.pid}`">
+          <RouterLink :to="`/blog/post/${comment.post.pid}`">
             {{ `${comment.post.title}(${comment.post.pid})` }}
           </RouterLink>
         </td>

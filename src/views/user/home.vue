@@ -2,9 +2,12 @@
   <div class="h-[calc(100vh-60px)] main-page">
     <div class="w-full h-full overflow-hidden flex flex-col items-center justify-center relative">
       <canvas ref="canvasEl" class="absolute top-0 left-0" />
-      <div class="z-10 absolute w-full h-full bg-black/40" />
-      <div class="font-bold text-6xl text-white z-20">
+      <div class="z-10 absolute w-full h-full bg-black/30" />
+      <div class="font-bold text-8xl text-white z-20 mb-8">
         DS Journey
+      </div>
+      <div class="font-bold text-3xl text-white z-20">
+        分布式体验与学习平台
       </div>
       <!-- <button
       class="px-4 py-2 my-4 font-semibold bg-green-300 hover:bg-green-400 border border-green-400 rounded-full transition-colors"
@@ -17,6 +20,10 @@
 </template>
 
 <script setup lang="ts">
+import { useStore } from '@/store'
+
+const store = useStore()
+
 const canvasEl = ref<HTMLCanvasElement>()
 
 const max_particles = 100
@@ -29,6 +36,8 @@ let time_to_recreate = false
 let canvas: CanvasRenderingContext2D | null
 
 onMounted(() => {
+  store.navTheme = 'dark'
+  time_to_recreate = true
   setTimeout(() => {
     time_to_recreate = true
   }, max_time)
@@ -40,6 +49,10 @@ onMounted(() => {
   }
 
   update()
+})
+
+onUnmounted(() => {
+  store.navTheme = 'light'
 })
 
 class Particle {
@@ -147,7 +160,6 @@ function popolate(num: number) {
     setTimeout(
       (function (x) {
         return function () {
-          // Add particle
           if (!canvas)
             return
           particles.push(new Particle(canvas))

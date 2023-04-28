@@ -58,11 +58,11 @@ export const adminSideBarItem = {
       to: '/comment-manage',
       display: '评论管理',
     },
-    {
-      name: 'system-setting',
-      to: '/system-setting',
-      display: '系统设置',
-    },
+    // {
+    //   name: 'system-setting',
+    //   to: '/system-setting',
+    //   display: '系统设置',
+    // },
   ],
   public: [
     {

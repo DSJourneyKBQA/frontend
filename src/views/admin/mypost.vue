@@ -22,14 +22,14 @@
         </tr>
         <tr v-for="post in postList" :key="post.pid">
           <td class="whitespace-nowrap overflow-ellipsis">
-            <RouterLink :to="`/post/${post.pid}`">
+            <RouterLink :to="`/blog/post/${post.pid}`">
               {{ post.title }}
             </RouterLink>
           </td>
           <td>{{ post.viewCount }}</td>
           <td>{{ post._count.comments }}</td>
           <td>
-            <RouterLink :to="`/post/edit/${post.pid}`">
+            <RouterLink :to="`/blog/post/edit/${post.pid}`">
               <CommonButton>编辑</CommonButton>
             </RouterLink>
             <CommonButton class="ml-2" @click="handlePostDelete(post.pid)">

@@ -15,7 +15,7 @@
         内容
       </p>
       <CommonButton v-if="setting.legacyEditor" v-model="newPostContent" />
-      <EditorMarkdown v-else v-model="newPostContent" class="h-[calc(100vh-320px)]" />
+      <EditorMarkdown v-else v-model="newPostContent" class="!h-[calc(100vh-320px)]" />
       <CommonButton class="mt-2" primary @click="handleNewPost">
         发布
       </CommonButton>

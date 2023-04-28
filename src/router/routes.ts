@@ -163,6 +163,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/user/blog/post.vue'),
       },
       {
+        path: 'blog/post/edit/:pid',
+        name: 'blog-post-edit',
+        component: () => import('@/views/user/blog/post-edit.vue'),
+      },
+      {
         path: 'user',
         name: 'user-profile',
         component: () => import('@/views/user/user.vue'),
