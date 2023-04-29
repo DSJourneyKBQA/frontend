@@ -4,7 +4,7 @@
       class="w-full h-[60px] fixed top-0 left-0 shadow-md flex justify-between z-50"
       :class="{
         'bg-white': navTheme === 'light',
-        'bg-[#2d333b] text-white': navTheme === 'dark',
+        'bg-[#2d333b] text-[#cdd9e5]': navTheme === 'dark',
       }"
     >
       <div>

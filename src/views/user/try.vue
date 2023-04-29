@@ -1,6 +1,6 @@
 <template>
   <div class="h-[calc(100vh-60px)] bg-[#1c2128] w-full flex">
-    <div class="flex-1 flex h-full items-center justify-center">
+    <div class="flex-1 flex h-full items-center justify-center relative">
       <div class="bg-[#22272e] w-[60px] h-full shrink-0 border-r border-[#373e47]">
         <TryToolBarItem
           v-for="itemType in itemTypeList" :key="itemType.value"
@@ -22,6 +22,11 @@
         @mouseleave="dragEnd"
         @mousemove="dragMove"
       >
+        <TryTutorial
+          v-show="showTutorial"
+          class="absolute top-2 right-14 z-50"
+          @close="showTutorial = false"
+        />
         <div class="absolute right-2 top-2" @mousedown.stop="null">
           <div
             class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
@@ -35,6 +40,13 @@
             @click="deleteSelectedItems"
           >
             <IconTrash class="w-6 h-6" />
+          </div>
+          <div
+            v-if="!showTutorial"
+            class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
+            @click="showTutorial = true"
+          >
+            <IconAcademic class="w-6 h-6" />
           </div>
         </div>
         <TryCanvasItem
@@ -75,7 +87,7 @@
           class="absolute right-0 top-0 p-2"
           @click="showInfoPanel = false"
         >
-          x
+          <IconClose class="w-6 h-6" />
         </button>
         <!-- <div>类型：{{ items[selectIndex].type }}</div> -->
         <div>
@@ -292,6 +304,7 @@ const selectIndex = ref(-1)
 const prePosition = ref<{ x: number; y: number }[]>([])
 const mousePosition = ref({ x: 0, y: 0 })
 const showInfoPanel = ref(false)
+const showTutorial = ref(true)
 const configLoaded = ref(false)
 const bucketConfig = ref<number[]>([])
 const configServers = computed(() => items.value.filter(item => item.type === ItemType.ConfigServer))

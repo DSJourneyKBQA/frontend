@@ -10,7 +10,7 @@
           {{ chapterContent.description }}
         </div>
         <div class="rendered" v-html="renderMarkdown(chapterContent.content)" />
-        <div class="my-1">
+        <div v-if="!chapterContent.status" class="my-1">
           <CommonButton primary @click="handleCompleteChapter">
             完成本章学习
           </CommonButton>
@@ -51,7 +51,14 @@
             运行结果
           </div>
           <div class="p-2 border-r">
-            当前题目：{{ selectQuestionId }}
+            当前题目：<select v-model.number="selectTestId" class="outline-none">
+              <option value="-1">
+                未选中
+              </option>
+              <option v-for="testId in testList" :key="testId" :value="testId">
+                {{ testId }}
+              </option>
+            </select>
           </div>
           <div class="p-2 border-r hover:bg-gray-200 cursor-pointer" @click="runTest">
             运行<IconPlay class="w-5 h-5 inline-block" />
@@ -136,7 +143,8 @@ const extensions = [StreamLanguage.define(go)]
 
 const chapters = ref<ChapterData[]>([])
 const chapterContent = ref<ChapterContentData>()
-const selectQuestionId = ref(2)
+const testList = ref<number[]>()
+const selectTestId = ref(-1)
 const code = ref('')
 const codeRunResult = ref('')
 const showQABot = ref(false)
@@ -179,10 +187,14 @@ function handleChapterData(data: any): ChapterData[] {
   return chapters
 }
 
-async function handleChangeChapter(chapterId: number) {
+async function handleChangeChapter(chapterId: number, status: boolean) {
   if (chapterId === -1)
     return
   chapterContent.value = await getChapterContent(chapterId)
+  if (chapterContent.value) {
+    chapterContent.value.status = status
+    testList.value = JSON.parse(chapterContent.value.tests)
+  }
 }
 
 function runTest() {
@@ -190,7 +202,8 @@ function runTest() {
     toast.warning('不可提交空代码')
     return
   }
-  submitTest(store.token, selectQuestionId.value, code.value)
+
+  submitTest(store.token, selectTestId.value, code.value)
     .then((res: any) => {
       codeRunResult.value = JSON.stringify(res)
     })
@@ -207,6 +220,9 @@ function handleCompleteChapter() {
   completeChapter(store.token, chapterContent.value.cid)
     .then(() => {
       toast.success('恭喜你完成本章学习')
+      fetchData()
+      if (chapterContent.value)
+        chapterContent.value.status = true
     })
     .catch((err) => {
       toast.error(err.message)

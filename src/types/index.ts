@@ -72,7 +72,8 @@ export interface ChapterContentData {
   title: string
   description: string
   content: string
-
+  status: boolean
+  tests: string
 }
 
 export interface AdminUserData {

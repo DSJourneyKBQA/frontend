@@ -17,6 +17,7 @@ declare module '@vue/runtime-core' {
     CommonSwitch: typeof import('./src/components/Common/switch.vue')['default']
     EditorMarkdown: typeof import('./src/components/Editor/markdown.vue')['default']
     EditorNormal: typeof import('./src/components/Editor/normal.vue')['default']
+    IconAcademic: typeof import('./src/components/Icon/academic.vue')['default']
     IconArrowLeft: typeof import('./src/components/Icon/arrow/left.vue')['default']
     IconArrowRight: typeof import('./src/components/Icon/arrow/right.vue')['default']
     IconChat: typeof import('./src/components/Icon/chat.vue')['default']
@@ -47,8 +48,10 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sidebar: typeof import('./src/components/Sidebar/index.vue')['default']
-    TryCanvasItem: typeof import('./src/components/Try/Canvas/item.vue')['default']
+    TryCanvasItem: typeof import('./src/components/Try/Canvas/Item.vue')['default']
     TryFloatAction: typeof import('./src/components/Try/FloatAction/index.vue')['default']
     TryToolBarItem: typeof import('./src/components/Try/ToolBar/item.vue')['default']
+    TryToolBarTip: typeof import('./src/components/Try/ToolBar/tip.vue')['default']
+    TryTutorial: typeof import('./src/components/Try/Tutorial/index.vue')['default']
   }
 }

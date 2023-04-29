@@ -170,7 +170,7 @@ function fetchData() {
         element.isChild = false
         chapterList.value.push(element)
         element.children.forEach((child: any) => {
-          element.sid = sid++
+          child.sid = sid++
           child.isChild = true
           chapterList.value.push(child)
         })

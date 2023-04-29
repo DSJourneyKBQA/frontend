@@ -1,8 +1,8 @@
 <template>
-  <div class="h-[calc(100vh-60px)] main-page">
+  <div class="h-[calc(100vh-60px)] select-none">
     <div class="w-full h-full overflow-hidden flex flex-col items-center justify-center relative">
       <canvas ref="canvasEl" class="absolute top-0 left-0" />
-      <div class="z-10 absolute w-full h-full bg-black/30" />
+      <div class="z-10 absolute w-full h-full bg-[#1c2128]/30" />
       <div class="font-bold text-8xl text-white z-20 mb-8">
         DS Journey
       </div>
@@ -34,6 +34,13 @@ const max_time = frequency * max_particles
 let time_to_recreate = false
 
 let canvas: CanvasRenderingContext2D | null
+
+window.onresize = () => {
+  if (canvasEl.value) {
+    canvasEl.value.width = document.documentElement.clientWidth
+    canvasEl.value.height = document.documentElement.clientHeight
+  }
+}
 
 onMounted(() => {
   store.navTheme = 'dark'
@@ -175,7 +182,7 @@ function clear() {
     return
   if (!canvasEl.value)
     return
-  canvas.fillStyle = '#111111'
+  canvas.fillStyle = '#1c2128'
   canvas.fillRect(0, 0, canvasEl.value.width, canvasEl.value.height)
 }
 

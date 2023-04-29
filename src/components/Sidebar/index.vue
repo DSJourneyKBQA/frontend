@@ -27,7 +27,7 @@
             'text-blue-500': currentChapter === String(idx),
             'text-black': currentChapter !== String(idx),
           }"
-          @click="handleChangeChapter(`${idx}`, chapter.id)"
+          @click="handleChangeChapter(`${idx}`, chapter.id, chapter.status)"
         >
           {{ chapter.name }}
         </div>
@@ -38,7 +38,7 @@
             'text-blue-500': currentChapter === `${idx}_${cidx}`,
             'text-black': currentChapter !== `${idx}_${cidx}`,
           }"
-          @click="handleChangeChapter(`${idx}_${cidx}`, child.id)"
+          @click="handleChangeChapter(`${idx}_${cidx}`, child.id, child.status)"
         >
           {{ child.name + (child.status ? '（已完成）' : '') }}
         </div>
@@ -59,11 +59,11 @@ const currentChapter = ref('')
 
 const showSidebar = ref(true)
 
-const handleChangeChapter = (chapterCode: string, chapterId: number) => {
+const handleChangeChapter = (chapterCode: string, chapterId: number, chapterStatus: boolean) => {
   if (chapterId === -1)
     return
 
   currentChapter.value = chapterCode
-  emits('changeChapter', chapterId)
+  emits('changeChapter', chapterId, chapterStatus)
 }
 </script>
