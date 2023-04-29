@@ -776,16 +776,15 @@ function connectGateway() {
     if (res) {
       // eslint-disable-next-line no-console
       console.log(res)
-      if (res.Layer === 'SERVICE') {
+      if (res.Layer === 'SERVICE')
         serviceLogs.value.push(event.data)
-        if (serviceLogEl.value)
-          serviceLogEl.value.scrollTo({ top: serviceLogEl.value.scrollHeight, behavior: 'smooth' })
-      }
-      else if (res.Layer === 'RAFT') {
+        // if (serviceLogEl.value)
+        //   serviceLogEl.value.scrollTo({ top: serviceLogEl.value.scrollHeight, behavior: 'smooth' })
+
+      else if (res.Layer === 'RAFT')
         raftLogs.value.push(event.data)
-        if (raftLogEl.value)
-          raftLogEl.value.scrollTo({ top: raftLogEl.value.scrollHeight, behavior: 'smooth' })
-      }
+        // if (raftLogEl.value)
+        //   raftLogEl.value.scrollTo({ top: raftLogEl.value.scrollHeight, behavior: 'smooth' })
 
       if (res.Logtype === 'HeartBeat') {
         playHeartbeatAnimation(res)
