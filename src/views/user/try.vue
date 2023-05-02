@@ -204,7 +204,7 @@
             <div class="mb-2">
               地址：<input v-model=" items[selectIndex].address " type="text" class="bg-transparent px-2 rounded-md border border-[#768390]">
             </div>
-            <div>
+            <div class="mb-2">
               Group：<select
                 v-model.number=" items[selectIndex].gid "
                 class="bg-transparent"
@@ -213,6 +213,9 @@
                   {{ i }}
                 </option>
               </select>
+            </div>
+            <div>
+              ID：<input v-model=" items[selectIndex].sid " type="text" class="bg-transparent px-2 rounded-md border border-[#768390]">
             </div>
           </div>
           <div class="rounded-md border border-[#768390] p-2 my-1">
