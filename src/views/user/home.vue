@@ -3,18 +3,15 @@
     <div class="w-full h-full overflow-hidden flex flex-col items-center justify-center relative">
       <canvas ref="canvasEl" class="absolute top-0 left-0" />
       <div class="z-10 absolute w-full h-full bg-[#1c2128]/30" />
-      <div class="font-bold text-8xl text-white z-20 mb-8">
-        DS Journey
+      <div class="text-8xl text-white z-20 flex items-center">
+        <img src="/logo.png" class="z-20 inline-block w-[250px] select-none">
+        <div class="-translate-x-[80px] -translate-y-2 title ">
+          DS Journey
+        </div>
       </div>
       <div class="font-bold text-3xl text-white z-20">
         分布式体验与学习平台
       </div>
-      <!-- <button
-      class="px-4 py-2 my-4 font-semibold bg-green-300 hover:bg-green-400 border border-green-400 rounded-full transition-colors"
-      @click="$router.push('/study')"
-    >
-      开始分布式学习之旅
-    </button> -->
     </div>
   </div>
 </template>
@@ -221,5 +218,7 @@ function update() {
 </script>
 
 <style>
-
+.title {
+  font-family: 'Orbitron', sans-serif;
+}
 </style>

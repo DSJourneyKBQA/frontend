@@ -2,7 +2,7 @@
   <div class="flex h-[calc(100vh-60px)] overflow-hidden">
     <Sidebar :data="chapters" @change-chapter="handleChangeChapter" />
     <div class="flex-1 p-4 h-full overflow-y-auto">
-      <div v-if="chapterContent" class="px-8">
+      <div v-if="chapterContent" class="px-16">
         <h2 class="text-3xl">
           {{ chapterContent.title }}
         </h2>

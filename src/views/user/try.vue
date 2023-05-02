@@ -383,6 +383,10 @@ onMounted(() => {
   showTutorial.value = (localStorage.getItem('showTutorial') || 'true') === 'true'
   configLoaded.value = true
   store.navTheme = 'dark'
+  setInterval(() => {
+    serviceLogs.value = serviceLogs.value.slice(-100)
+    raftLogs.value = raftLogs.value.slice(-100)
+  }, 1000 * 5)
 })
 
 onUnmounted(() => {
@@ -830,8 +834,8 @@ function connectGateway() {
       toast.error(`数据解析失败：${event.data}`)
     }
     if (res) {
-      // eslint-disable-next-line no-console
-      console.log(res)
+      // // eslint-disable-next-line no-console
+      // console.log(res)
       if (res.Layer === 'SERVICE') {
         serviceLogs.value.push({
           timestamp: res.Time,
