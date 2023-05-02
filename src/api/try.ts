@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export function gatewayStartServer(
+export function gatewayStartService(
   gateway: string,
   gid: number,
   sid: number,
@@ -19,7 +19,7 @@ export function gatewayStartServer(
   })
 }
 
-export function gatewayStopServer(gateway: string, type: string, gid: number, sid: number): any {
+export function gatewayStopService(gateway: string, type: string, gid: number, sid: number): any {
   return axios.put(`${gateway}/stop`, {}, {
     headers: {
       sid,

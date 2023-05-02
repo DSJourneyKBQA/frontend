@@ -8,8 +8,6 @@
     :style="{
       transform: `translate(${position.x * 20}px, ${position.y * 20}px)`,
     }"
-    @mousedown.prevent.stop="$emit('dragStart', index, $event)"
-    @click.stop="$emit('select', index)"
   >
     <IconDynamic
       :type="type" class="w-8 h-8 transition-transform duration-150"
@@ -37,5 +35,4 @@ defineProps<{
   }
   select: boolean
 }>()
-defineEmits(['dragStart', 'select'])
 </script>

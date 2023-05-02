@@ -9,22 +9,22 @@
     >
       <div>
         <RouterLink to="/">
-          <div class="leading-[60px] px-10 inline-block hover:bg-gray-500/20 transition-colors">
+          <div class="leading-[60px] px-10 font-bold inline-block hover:bg-gray-500/20 transition-colors">
             首页
           </div>
         </RouterLink>
         <RouterLink to="/study">
-          <div class="leading-[60px] px-10 inline-block hover:bg-gray-500/20 transition-colors">
+          <div class="leading-[60px] px-10 font-bold inline-block hover:bg-gray-500/20 transition-colors">
             学习
           </div>
         </RouterLink>
         <RouterLink to="/try">
-          <div class="leading-[60px] px-10 inline-block hover:bg-gray-500/20 transition-colors">
+          <div class="leading-[60px] px-10 font-bold inline-block hover:bg-gray-500/20 transition-colors">
             体验
           </div>
         </RouterLink>
         <RouterLink to="/blog">
-          <div class="leading-[60px] px-10 inline-block hover:bg-gray-500/20 transition-colors">
+          <div class="leading-[60px] px-10 font-bold inline-block hover:bg-gray-500/20 transition-colors">
             博客
           </div>
         </RouterLink>

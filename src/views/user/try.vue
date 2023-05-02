@@ -18,8 +18,8 @@
         class="canvas bg-[#1c2128] flex-1 h-full overflow-hidden relative"
         @dblclick="boxSelectionCancel"
         @mousedown="boxSelectionStart"
-        @mouseup="dragEnd"
-        @mouseleave="dragEnd"
+        @mouseup="dragEnd()"
+        @mouseleave="dragEnd()"
         @mousemove="dragMove"
       >
         <TryTutorial
@@ -29,6 +29,15 @@
         />
         <div class="absolute right-2 top-2" @mousedown.stop="null">
           <div
+            v-if="!showTutorial"
+            title="显示教程"
+            class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
+            @click="showTutorial = true"
+          >
+            <IconAcademic class="w-6 h-6" />
+          </div>
+          <div
+            title="重置数据"
             class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
             @click="items = []"
           >
@@ -36,17 +45,27 @@
           </div>
           <div
             v-if="items.filter((item) => item.select).length !== 0"
+            title="删除选中服务"
             class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
             @click="deleteSelectedItems"
           >
             <IconTrash class="w-6 h-6" />
           </div>
           <div
-            v-if="!showTutorial"
+            v-if="items.filter((item) => item.select).length !== 0"
+            title="启动选中服务"
             class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
-            @click="showTutorial = true"
+            @click="startServiceBatch"
           >
-            <IconAcademic class="w-6 h-6" />
+            <IconCirclePlay class="w-6 h-6" />
+          </div>
+          <div
+            v-if="items.filter((item) => item.select).length !== 0"
+            title="停止选中服务"
+            class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
+            @click="stopServiceBatch"
+          >
+            <IconCircleStop class="w-6 h-6" />
           </div>
         </div>
         <TryCanvasItem
@@ -60,8 +79,9 @@
             'select-none': dragging,
           }"
           title="服务器"
-          @drag-start="dragStart"
-          @select="showInfoPanel = true;selectIndex = index"
+          @mousedown.stop="dragStart(index, $event)"
+          @mouseup.stop="dragEnd(index)"
+          @click="itemClick(index)"
         />
         <div
           v-show="boxSelectionConfig.enable"
@@ -83,44 +103,41 @@
       }"
     >
       <div v-if="selectIndex !== -1" class="w-[500px] h-full p-4 overflow-x-hidden overflow-y-auto flex flex-col">
-        <button
-          class="absolute right-0 top-0 p-2"
-          @click="showInfoPanel = false"
-        >
-          <IconClose class="w-6 h-6" />
-        </button>
-        <!-- <div>类型：{{ items[selectIndex].type }}</div> -->
-        <div>
-          <template v-if=" items[selectIndex].type !== ItemType.GatewayServer">
+        <div class="rounded-md border border-[#768390] p-2 my-1">
+          <div class="mb-2">
+            类型：{{ items[selectIndex].type }}
+          </div>
+          <div>
+            <template v-if="items[selectIndex].type !== ItemType.GatewayServer">
+              <button
+                class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+                @click="startService(items[selectIndex].id)"
+              >
+                启动
+              </button>
+              <button
+                class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+                @click="stopService(items[selectIndex].id)"
+              >
+                关闭
+              </button>
+            </template>
             <button
               class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
-              @click=" startServer(items[selectIndex].id) "
+              @click="deleteItem(selectIndex)"
             >
-              启动
+              删除
             </button>
             <button
               class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
-              @click=" stopServer(items[selectIndex].id) "
+              @click="clearLog"
             >
-              关闭
+              清空日志
             </button>
-          </template>
-
-          <button
-            class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
-            @click="deleteItem(selectIndex) "
-          >
-            删除
-          </button>
-          <button
-            class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
-            @click="clearLog"
-          >
-            清空日志
-          </button>
+          </div>
         </div>
 
-        <div v-if=" items[selectIndex].type === ItemType.GatewayServer">
+        <div v-if="items[selectIndex].type === ItemType.GatewayServer">
           <div class="rounded-md border border-[#768390] p-2 my-1">
             <div>
               网关地址：<input v-model=" items[selectIndex].address " type="text" class="bg-transparent px-2 rounded-md border border-[#768390]">
@@ -128,13 +145,13 @@
             <div class="mt-2">
               <button
                 class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
-                @click=" connectGateway "
+                @click="connectGateway"
               >
                 连接网关
               </button>
               <button
                 class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
-                @click=" disconnectGateway "
+                @click="disconnectGateway"
               >
                 断开网关
               </button>
@@ -171,7 +188,7 @@
             <div class="mt-2">
               <button
                 class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
-                @click="setGroupInfo "
+                @click="setGroupInfo"
               >
                 设置分组信息
               </button>
@@ -191,7 +208,7 @@
             <div class="mt-2">
               <button
                 class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
-                @click=" setBucketInfo "
+                @click="setBucketInfo"
               >
                 设置路由表
               </button>
@@ -207,9 +224,9 @@
             <div class="mb-2">
               Group：<select
                 v-model.number=" items[selectIndex].gid "
-                class="bg-transparent"
+                class="bg-transparent rounded-md border border-[#768390]"
               >
-                <option v-for=" i in 10 " :key=" i " :value=" i ">
+                <option v-for=" i in 10 " :key=" i " :value=" i " class="bg-[#22272e]">
                   {{ i }}
                 </option>
               </select>
@@ -239,13 +256,13 @@
             <div class="mt-2">
               <button
                 class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
-                @click=" setStorageKv "
+                @click="setStorageKv"
               >
                 Put
               </button>
               <button
                 class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
-                @click=" getStorageKv "
+                @click="getStorageKv"
               >
                 Get
               </button>
@@ -292,21 +309,19 @@ import { bucketSize, itemTypeList } from '@/config'
 import { ItemType } from '@/enums'
 import { useStore } from '@/store'
 import type { CanvasItem, LogData } from '@/types'
-import { gatewayDisconnect, gatewayStartServer, gatewayStopServer, getKv, putKv, queryBuckets, setGroup, updateBucket } from '@/api/try'
+import { gatewayDisconnect, gatewayStartService, gatewayStopService, getKv, putKv, queryBuckets, setGroup, updateBucket } from '@/api/try'
 import { formatTimeMs } from '@/utils'
 
 const store = useStore()
 const toast = useToast()
 
+const configLoaded = ref(false)
 const items = ref<CanvasItem[]>([])
 const dragging = ref(false)
 const dragIndex = ref(-1)
 const draggingToolbarItem = ref(false)
 const serviceLogs = ref<LogData[]>([])
 const raftLogs = ref<LogData[]>([])
-const serviceLogEl = ref<HTMLDivElement>()
-const raftLogEl = ref<HTMLDivElement>()
-const canvasEl = ref<HTMLDivElement>()
 const boxSelectionConfig = ref({
   enable: false,
   x: 0,
@@ -314,15 +329,27 @@ const boxSelectionConfig = ref({
   width: 0,
   height: 0,
 })
-
-const selectIndex = ref(-1)
-
 const prePosition = ref<{ x: number; y: number }[]>([])
 const mousePosition = ref({ x: 0, y: 0 })
-const showInfoPanel = ref(false)
 const showTutorial = ref(true)
-const configLoaded = ref(false)
 const bucketConfig = ref<number[]>([])
+const clientConfig = ref({
+  key: '',
+  value: '',
+})
+const serviceLogEl = ref<HTMLDivElement>()
+const raftLogEl = ref<HTMLDivElement>()
+const canvasEl = ref<HTMLDivElement>()
+
+const selectedItems = computed(() => items.value.filter(item => item.select))
+const selectIndex = computed(() => {
+  if (selectedItems.value.length === 1)
+    return items.value.findIndex(item => item.id === selectedItems.value[0].id)
+
+  else
+    return -1
+})
+const showInfoPanel = computed(() => selectIndex.value !== -1)
 const configServers = computed(() => items.value.filter(item => item.type === ItemType.ConfigServer))
 const storageServers = computed(() => items.value.filter(item => item.type === ItemType.StorageServer))
 const groupList = computed(() => {
@@ -334,10 +361,6 @@ const groupList = computed(() => {
     }
   })
   return list
-})
-const clientConfig = ref({
-  key: '',
-  value: '',
 })
 
 let socket: WebSocket
@@ -357,7 +380,7 @@ onMounted(() => {
   bucketConfig.value = JSON.parse(localStorage.getItem('bucketConfig') || '[]')
   if (bucketConfig.value.length !== bucketSize)
     bucketConfig.value = Array.from({ length: bucketSize }, () => 1)
-
+  showTutorial.value = (localStorage.getItem('showTutorial') || 'true') === 'true'
   configLoaded.value = true
   store.navTheme = 'dark'
 })
@@ -372,6 +395,7 @@ watchEffect(() => {
     return
   localStorage.setItem('items', JSON.stringify(items.value))
   localStorage.setItem('bucketConfig', JSON.stringify(bucketConfig.value))
+  localStorage.setItem('showTutorial', showTutorial.value.toString())
 })
 
 // 画布相关函数
@@ -425,8 +449,6 @@ function addItem(type: ItemType, initPosition: { x: number; y: number } = { x: 5
 
 function deleteItem(index: number) {
   items.value.splice(index, 1)
-  selectIndex.value = -1
-  showInfoPanel.value = false
 }
 
 function boxSelectionStart(e: MouseEvent) {
@@ -447,6 +469,13 @@ function boxSelectionCancel() {
   items.value.forEach((ele) => {
     ele.select = false
   })
+}
+
+function itemClick(index: number) {
+  items.value.forEach((ele) => {
+    ele.select = false
+  })
+  items.value[index].select = true
 }
 
 function dragAddItem(type: ItemType, e: MouseEvent) {
@@ -478,10 +507,20 @@ function dragStart(index: number, e: MouseEvent) {
   }
 }
 
-function dragEnd() {
+function dragEnd(index = -1) {
   dragging.value = false
-  dragIndex.value = -1
   boxSelectionConfig.value.enable = false
+  if (dragIndex.value === -1 || index === -1)
+    return
+
+  if (prePosition.value[index].x === items.value[index].position.x && prePosition.value[index].y === items.value[index].position.y) {
+    if (dragIndex.value === index) {
+      items.value.forEach((ele, i) => {
+        ele.select = i === index
+      })
+    }
+  }
+  dragIndex.value = -1
 }
 
 function dragMove(e: MouseEvent) {
@@ -864,20 +903,20 @@ function disconnectGateway() {
   gatewayDisconnect(`http://${gateway.address}`)
 }
 
-function startServer(id: string) {
-  const item = items.value.find(ele => ele.id === id)
+function startService(id: string) {
   const gateway = items.value.find(ele => ele.type === ItemType.GatewayServer)
   if (!gateway) {
     toast.info('请先添加网关服务')
     return
   }
+  const item = items.value.find(ele => ele.id === id)
   if (!item) {
     toast.error('未找到对应服务')
     return
   }
   if (item.type === ItemType.ConfigServer) {
     const cfg_addrs = configServers.value.map(ele => ele.address).join(',')
-    gatewayStartServer(`http://${gateway.address}`, -1, item.sid, 'configserver', cfg_addrs, undefined)
+    gatewayStartService(`http://${gateway.address}`, -1, item.sid, 'configserver', cfg_addrs, undefined)
       .then(() => {
         toast.success('发送启动请求成功')
       })
@@ -889,7 +928,7 @@ function startServer(id: string) {
   if (item.type === ItemType.StorageServer) {
     const cfg_addrs = configServers.value.map(ele => ele.address).join(',')
     const shared_addrs = storageServers.value.filter(ele => ele.gid === item.gid).map(ele => ele.address).join(',')
-    gatewayStartServer(`http://${gateway.address}`, item.gid, item.sid, 'sharedserver', cfg_addrs, shared_addrs)
+    gatewayStartService(`http://${gateway.address}`, item.gid, item.sid, 'sharedserver', cfg_addrs, shared_addrs)
       .then(() => {
         toast.success('发送启动请求成功')
       })
@@ -899,7 +938,13 @@ function startServer(id: string) {
   }
 }
 
-function stopServer(id: string) {
+function startServiceBatch() {
+  selectedItems.value.forEach((item) => {
+    startService(item.id)
+  })
+}
+
+function stopService(id: string) {
   const item = items.value.find(ele => ele.id === id)
   const gateway = items.value.find(ele => ele.type === ItemType.GatewayServer)
   if (!gateway) {
@@ -911,7 +956,7 @@ function stopServer(id: string) {
     return
   }
   if (item.type === ItemType.ConfigServer) {
-    gatewayStopServer(`http://${gateway.address}`, 'configserver', -1, item.sid)
+    gatewayStopService(`http://${gateway.address}`, 'configserver', -1, item.sid)
       .then(() => {
         toast.success('发送关闭请求成功')
       })
@@ -920,7 +965,7 @@ function stopServer(id: string) {
       })
   }
   if (item.type === ItemType.StorageServer) {
-    gatewayStopServer(`http://${gateway.address}`, 'sharedserver', item.gid, item.sid)
+    gatewayStopService(`http://${gateway.address}`, 'sharedserver', item.gid, item.sid)
       .then(() => {
         toast.success('发送关闭请求成功')
       })
@@ -928,6 +973,12 @@ function stopServer(id: string) {
         toast.error('发送关闭请求失败')
       })
   }
+}
+
+function stopServiceBatch() {
+  selectedItems.value.forEach((item) => {
+    stopService(item.id)
+  })
 }
 
 function setGroupInfo() {
