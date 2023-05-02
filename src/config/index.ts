@@ -9,6 +9,8 @@ export const backendRepo = 'https://github.com/DSJourneyKBQA/web-server'
 
 export const pageSize = 10
 
+export const bucketSize = 15
+
 export const adminSideBarItem = {
   user: [
     {

@@ -145,3 +145,14 @@ export interface CanvasItem {
   sid: number
   gid: number
 }
+
+export interface TestData {
+  id: number
+  template: string
+}
+
+export interface LogData {
+  timestamp: string
+  type: string
+  raw: string
+}

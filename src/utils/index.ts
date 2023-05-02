@@ -1,5 +1,6 @@
 import { marked } from 'marked'
 import hljs from 'highlight.js/lib/common'
+import type { TestData } from '@/types'
 
 const rendererPost = new marked.Renderer()
 rendererPost.link = (href, title, text) =>
@@ -22,8 +23,15 @@ function replaceShortcode(text: string) {
     .replaceAll('[/notice]', '</div>')
 }
 
+function replaceTest(text: string) {
+  const reg = /\[test id=(\d+)\]/g
+  return text
+    .replaceAll(reg, '\`\`\`go')
+    .replaceAll('[/test]', '\`\`\`')
+}
+
 export function renderMarkdown(text: string) {
-  return replaceShortcode(marked.parse(text))
+  return replaceShortcode(marked.parse(replaceTest(text)))
 }
 
 export function formatTime(time: string | number) {
@@ -48,4 +56,17 @@ export function formatTimeMs(time: string | number) {
   const s = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds()
   const ms = date.getMilliseconds()
   return `${Y + M + D + h + m + s}.${ms}`
+}
+
+export function parseTest(text: string): TestData[] {
+  const tests: TestData[] = [];
+  [...text.matchAll(/\[test id=(\d+)\]((.|\n)+?)\[\/test\]/g)].forEach(
+    (test) => {
+      tests.push({
+        id: Number(test[1]),
+        template: test[2],
+      })
+    },
+  )
+  return tests
 }

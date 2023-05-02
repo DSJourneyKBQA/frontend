@@ -67,3 +67,12 @@ export function getKv(gateway: string, key: string): any {
     },
   })
 }
+
+export function queryBuckets(gateway: string, gid: number, blist: string): any {
+  return axios.get(`${gateway}/apis/query`, {
+    headers: {
+      gid,
+      blist,
+    },
+  })
+}

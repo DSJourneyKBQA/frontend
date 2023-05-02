@@ -1,0 +1,11 @@
+code.hljs {
+  @apply rounded-xl leading-normal my-3;
+}
+
+.rendered img {
+  @apply max-w-full rounded-xl;
+}
+
+.rendered>* {
+  @apply my-2;
+}

@@ -215,6 +215,14 @@
               </select>
             </div>
           </div>
+          <div class="rounded-md border border-[#768390] p-2 my-1">
+            <button
+              class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+              @click="queryBucketsContent"
+            >
+              查询
+            </button>
+          </div>
         </div>
 
         <div v-if=" items[selectIndex].type === ItemType.Client ">
@@ -244,25 +252,29 @@
         <div class="my-1">
           Service层日志
         </div>
-        <div class="flex flex-1 overflow-y-auto flex-col p-1 border border-[#768390] rounded-md min-h-[200px]">
+        <div ref="serviceLogEl" class="flex flex-1 overflow-y-auto flex-col p-1 border border-[#768390] rounded-md min-h-[200px]">
           <div
             v-for="log, index in serviceLogs" :key="index"
-            ref="serviceLogEl"
             class="border-b border-[#768390] py-1 text-sm break-words"
           >
-            {{ log }}
+            <div class="text-green-400">
+              {{ formatTimeMs(log.timestamp) }} {{ log.type }}
+            </div>
+            {{ log.raw }}
           </div>
         </div>
         <div class="my-1">
           Raft层日志
         </div>
-        <div class="flex flex-1 overflow-y-auto flex-col p-1 border border-[#768390] rounded-md min-h-[200px]">
+        <div ref="raftLogEl" class="flex flex-1 overflow-y-auto flex-col p-1 border border-[#768390] rounded-md min-h-[200px]">
           <div
             v-for="log, index in raftLogs" :key="index"
-            ref="raftLogEl"
             class="border-b border-[#768390] py-1 text-sm break-words"
           >
-            {{ log }}
+            <div class="text-green-400">
+              {{ formatTimeMs(log.timestamp) }} {{ log.type }}
+            </div>
+            {{ log.raw }}
           </div>
         </div>
       </div>
@@ -273,11 +285,12 @@
 <script setup lang="ts">
 import { useToast } from 'vue-toastification'
 import { nanoid } from 'nanoid'
-import { itemTypeList } from '@/config'
+import { bucketSize, itemTypeList } from '@/config'
 import { ItemType } from '@/enums'
 import { useStore } from '@/store'
-import type { CanvasItem } from '@/types'
-import { gatewayDisconnect, gatewayStartServer, gatewayStopServer, getKv, putKv, setGroup, updateBucket } from '@/api/try'
+import type { CanvasItem, LogData } from '@/types'
+import { gatewayDisconnect, gatewayStartServer, gatewayStopServer, getKv, putKv, queryBuckets, setGroup, updateBucket } from '@/api/try'
+import { formatTimeMs } from '@/utils'
 
 const store = useStore()
 const toast = useToast()
@@ -286,8 +299,8 @@ const items = ref<CanvasItem[]>([])
 const dragging = ref(false)
 const dragIndex = ref(-1)
 const draggingToolbarItem = ref(false)
-const serviceLogs = ref<string[]>([])
-const raftLogs = ref<string[]>([])
+const serviceLogs = ref<LogData[]>([])
+const raftLogs = ref<LogData[]>([])
 const serviceLogEl = ref<HTMLDivElement>()
 const raftLogEl = ref<HTMLDivElement>()
 const canvasEl = ref<HTMLDivElement>()
@@ -339,8 +352,8 @@ onMounted(() => {
       item.position.y = 0
   })
   bucketConfig.value = JSON.parse(localStorage.getItem('bucketConfig') || '[]')
-  if (bucketConfig.value.length !== 15)
-    bucketConfig.value = Array.from({ length: 15 }, () => 1)
+  if (bucketConfig.value.length !== bucketSize)
+    bucketConfig.value = Array.from({ length: bucketSize }, () => 1)
 
   configLoaded.value = true
   store.navTheme = 'dark'
@@ -348,6 +361,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   store.navTheme = 'light'
+  disconnectGateway()
 })
 
 watchEffect(() => {
@@ -776,15 +790,29 @@ function connectGateway() {
     if (res) {
       // eslint-disable-next-line no-console
       console.log(res)
-      if (res.Layer === 'SERVICE')
-        serviceLogs.value.push(event.data)
-        // if (serviceLogEl.value)
-        //   serviceLogEl.value.scrollTo({ top: serviceLogEl.value.scrollHeight, behavior: 'smooth' })
+      if (res.Layer === 'SERVICE') {
+        serviceLogs.value.push({
+          timestamp: res.Time,
+          type: res.Logtype,
+          raw: event.data,
+        })
+        nextTick(() => {
+          if (serviceLogEl.value)
+            serviceLogEl.value.scrollTo({ top: serviceLogEl.value.scrollHeight, behavior: 'smooth' })
+        })
+      }
 
-      else if (res.Layer === 'RAFT')
-        raftLogs.value.push(event.data)
-        // if (raftLogEl.value)
-        //   raftLogEl.value.scrollTo({ top: raftLogEl.value.scrollHeight, behavior: 'smooth' })
+      else if (res.Layer === 'RAFT') {
+        raftLogs.value.push({
+          timestamp: res.Time,
+          type: res.Logtype,
+          raw: event.data,
+        })
+        nextTick(() => {
+          if (raftLogEl.value)
+            raftLogEl.value.scrollTo({ top: raftLogEl.value.scrollHeight, behavior: 'smooth' })
+        })
+      }
 
       if (res.Logtype === 'HeartBeat') {
         playHeartbeatAnimation(res)
@@ -951,6 +979,23 @@ function getStorageKv() {
     return
   }
   getKv(`http://${gateway.address}`, clientConfig.value.key)
+    .then((res: any) => {
+      toast.success(res.data)
+    })
+    .catch(() => {
+      toast.error('发送请求失败')
+    })
+}
+
+function queryBucketsContent() {
+  const gateway = items.value.find(ele => ele.type === ItemType.GatewayServer)
+  if (!gateway) {
+    toast.info('请先添加网关服务')
+    return
+  }
+
+  const gid = items.value[selectIndex.value].gid
+  queryBuckets(`http://${gateway.address}`, gid, Array.from({ length: 15 }, (_, i) => i).join(','))
     .then((res: any) => {
       toast.success(res.data)
     })

@@ -5,6 +5,7 @@ import router from '@/router'
 
 import '@/assets/style/tailwind.css'
 import '@/assets/style/transition.css'
+import '@/assets/style/markdown.css'
 
 import 'nprogress/nprogress.css'
 import 'vue-toastification/dist/index.css'

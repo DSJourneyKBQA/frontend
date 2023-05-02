@@ -21,13 +21,22 @@
       </div>
     </div>
     <div
-      class="h-full flex flex-col border-l transition-all" :class="{
+      class="h-full flex flex-col border-l transition-all relative" :class="{
         'flex-1': showCodeEditor,
         'w-0': !showCodeEditor,
       }"
     >
-      <div class="h-[60%] overflow-y-auto">
-        <div class="border-b flex justify-between">
+      <div
+        v-if="waitTestResult"
+        class="absolute w-full h-full top-0 left-0 flex flex-col items-center justify-center bg-black/10 z-50 select-none"
+      >
+        <IconLoading class="w-20 h-20" />
+        <div class="mt-4">
+          等待运行结果
+        </div>
+      </div>
+      <div class="h-[60%] flex flex-col">
+        <div class="border-b w-full flex justify-between">
           <div class="p-2 border-r">
             代码编辑器
           </div>
@@ -35,15 +44,17 @@
             <IconClose class="w-5 h-5 inline-block" />
           </div>
         </div>
-        <Codemirror
-          v-model="code"
-          placeholder="请输入代码"
-          class="w-full h-full"
-          :autofocus="true"
-          :tab-size="2"
-          :indent-with-tab="true"
-          :extensions="extensions"
-        />
+        <div class="flex-1 overflow-y-auto">
+          <Codemirror
+            v-model="code"
+            placeholder="请输入代码"
+            class="w-full"
+            :autofocus="true"
+            :tab-size="2"
+            :indent-with-tab="true"
+            :extensions="extensions"
+          />
+        </div>
       </div>
       <div class="h-[40%] border-t">
         <div class="border-b flex">
@@ -51,12 +62,12 @@
             运行结果
           </div>
           <div class="p-2 border-r">
-            当前题目：<select v-model.number="selectTestId" class="outline-none">
+            当前题目：<select v-model.number="selectTestIndex" class="outline-none">
               <option value="-1">
                 未选中
               </option>
-              <option v-for="testId in testList" :key="testId" :value="testId">
-                {{ testId }}
+              <option v-for="test, idx in testList" :key="test.id" :value="idx">
+                {{ test.id }}
               </option>
             </select>
           </div>
@@ -132,8 +143,8 @@ import { go } from '@codemirror/legacy-modes/mode/go'
 import { useToast } from 'vue-toastification'
 import { completeChapter, getChapterContent, getChapterList, submitTest } from '@/api/study'
 import { useStore } from '@/store'
-import type { ChapterContentData, ChapterData } from '@/types'
-import { renderMarkdown } from '@/utils'
+import type { ChapterContentData, ChapterData, TestData } from '@/types'
+import { parseTest, renderMarkdown } from '@/utils'
 
 const store = useStore()
 const toast = useToast()
@@ -143,15 +154,21 @@ const extensions = [StreamLanguage.define(go)]
 
 const chapters = ref<ChapterData[]>([])
 const chapterContent = ref<ChapterContentData>()
-const testList = ref<number[]>()
-const selectTestId = ref(-1)
+const testList = ref<TestData[]>([])
+const selectTestIndex = ref(-1)
 const code = ref('')
 const codeRunResult = ref('')
 const showQABot = ref(false)
 const showCodeEditor = ref(false)
+const waitTestResult = ref(false)
 
 onMounted(async () => {
   fetchData()
+})
+
+watchEffect(() => {
+  if (selectTestIndex.value !== -1)
+    code.value = testList.value[selectTestIndex.value].template || ''
 })
 
 function fetchData() {
@@ -192,8 +209,9 @@ async function handleChangeChapter(chapterId: number, status: boolean) {
     return
   chapterContent.value = await getChapterContent(chapterId)
   if (chapterContent.value) {
+    selectTestIndex.value = -1
     chapterContent.value.status = status
-    testList.value = JSON.parse(chapterContent.value.tests)
+    testList.value = parseTest(chapterContent.value.content)
   }
 }
 
@@ -202,13 +220,16 @@ function runTest() {
     toast.warning('不可提交空代码')
     return
   }
-
-  submitTest(store.token, selectTestId.value, code.value)
+  waitTestResult.value = true
+  submitTest(store.token, testList.value[selectTestIndex.value].id, code.value)
     .then((res: any) => {
       codeRunResult.value = JSON.stringify(res)
     })
     .catch((err: Error) => {
       toast.error(err.message)
+    })
+    .finally(() => {
+      waitTestResult.value = false
     })
 }
 
@@ -229,17 +250,3 @@ function handleCompleteChapter() {
     })
 }
 </script>
-
-<style>
-code.hljs {
-  @apply rounded-xl leading-normal my-3;
-}
-
-.rendered img {
-  @apply max-w-full rounded-xl;
-}
-
-.rendered>* {
-  @apply my-2;
-}
-</style>
