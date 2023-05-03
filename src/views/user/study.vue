@@ -16,7 +16,7 @@
           </CommonButton>
         </div>
       </div>
-      <div class="w-full h-full relative overflow-hidden">
+      <div v-show="!chapterContent" class="w-full h-full relative overflow-hidden">
         <!-- <div class="noite" /> -->
         <div class="constelacao" />
         <div class="chuvaMeteoro" />
