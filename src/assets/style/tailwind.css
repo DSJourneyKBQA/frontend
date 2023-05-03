@@ -45,16 +45,20 @@
   }
 
   tr {
-    border-top: 1px solid #dfe2e5;
+    @apply border-t border-github;
   }
 
   td,
   th {
-    @apply border border-[#dfe2e5] dark:border-gray-600 px-4 py-2;
+    @apply border border-github dark:border-gray-600 px-4 py-2;
   }
 
   tr:nth-child(2n) {
-    @apply bg-[#f6f8fa] dark:bg-slate-50/5
+    @apply bg-github dark:bg-slate-50/5;
+  }
+  
+  hr {
+    @apply border-gh-btn-hover;
   }
 }
 

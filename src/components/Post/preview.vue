@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm">
+  <div class="w-full bg-github-card my-2 rounded-md overflow-hidden shadow-sm border border-github">
     <div class="flex pt-6 px-4">
       <RouterLink :to="`/user/${postData.user.uid}`">
         <img

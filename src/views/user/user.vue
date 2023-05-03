@@ -1,11 +1,11 @@
 <template>
   <div class="w-full lg:w-[700px] xl:w-[1024px] mx-auto">
-    <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4 relative">
+    <div class="w-full bg-gh-card border border-github my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4 relative">
       <div v-if="enableEditMode" class="absolute top-4 right-4">
-        <CommonButton @click="handleGoAdmin">
+        <CommonButton dark @click="handleGoAdmin">
           进入后台
         </CommonButton>
-        <CommonButton class="ml-1" @click="handleLogout">
+        <CommonButton dark class="ml-1" @click="handleLogout">
           退出登录
         </CommonButton>
       </div>
@@ -22,8 +22,8 @@
           <span class="font-bold mt-4">{{ userProfile?.nickname }}</span>
           <span class="text-gray-500">@{{ userProfile?.name }}</span>
           <div class="mt-2">
-            <span class="mr-2 text-sm bg-yellow-300 px-1 py-0.5 rounded-md">uid:{{ userProfile?.uid }}</span>
-            <span class="mr-2 text-sm bg-red-300 px-1 py-0.5 rounded-md">用户组:{{ userProfile?.role }}</span>
+            <span class="mr-2 text-sm bg-yellow-300/50 px-1 py-0.5 rounded-md text-white">uid:{{ userProfile?.uid }}</span>
+            <span class="mr-2 text-sm bg-red-300/50 px-1 py-0.5 rounded-md text-white">用户组:{{ userProfile?.role }}</span>
             <span
               v-if="userProfile.status !== 0"
               class="mr-2 text-sm bg-red-500 px-1 py-0.5 rounded-md text-white"
@@ -32,10 +32,10 @@
         </div>
       </template>
     </div>
-    <div v-if="enableEditMode" class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4">
+    <div v-if="enableEditMode" class="w-full bg-gh-card border border-github my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4">
       <PostNew :data="newPostParams" @new-post="handleNewPost" />
     </div>
-    <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-2">
+    <div class="w-full bg-gh-card border border-github my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-2">
       <h2>{{ enableEditMode ? '我的' : '用户' }}文章</h2>
       <div v-if="userPosts.length === 0" class="text-center pb-4">
         <span>这里还什么都没有呢</span>

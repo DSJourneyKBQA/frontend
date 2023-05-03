@@ -1,7 +1,7 @@
 <template>
-  <div class="w-full lg:w-[700px] xl:w-[1024px] mx-auto">
+  <div class="w-full lg:w-[700px] xl:w-[1024px] mx-auto py-4">
     <div v-if="loading" class="w-full my-10 flex justify-center">
-      <IconLoading class="w-20 h-20" />
+      <IconLoading class="w-20 h-20" :dark="false" />
     </div>
     <Transition name="popup-t">
       <div v-show="posts.length !== 0">
@@ -11,9 +11,9 @@
           @like-add="handleLikeChange($event, true)"
           @like-reduce="handleLikeChange($event, false)"
         />
+        <CommonPagination :current-page="currentPage" :total-count="postCount" :page-size="pageSize" @change="handlePageChange" />
       </div>
     </Transition>
-    <CommonPagination :current-page="currentPage" :total-count="postCount" :page-size="pageSize" @change="handlePageChange" />
   </div>
 </template>
 

@@ -6,7 +6,7 @@ export const useStore = defineStore('main', {
     uid: 0,
     login: false,
     isAdmin: false,
-    navTheme: 'light',
+    navTheme: 'dark',
     setting: {
       legacyEditor: false,
       stickyTextarea: false,

@@ -1,17 +1,17 @@
 <template>
-  <div class="w-full lg:w-[700px] xl:w-[1024px] mx-auto">
+  <div class="w-full lg:w-[700px] xl:w-[1024px] mx-auto py-4">
     <div class="w-full">
       <div v-if="loading" class="w-full my-10 flex justify-center">
-        <IconLoading class="w-20 h-20" />
+        <IconLoading class="w-20 h-20" :dark="false" />
       </div>
       <Transition name="popup-t">
-        <div v-if="postData" class="w-full my-2 overflow-hidden bg-white rounded-md">
+        <div v-if="postData" class="w-full my-2 overflow-hidden bg-transparent rounded-md border border-github">
           <div class="px-8 pt-4">
             <p class="text-3xl leading-[60px] font-bold">
               {{ postData.title }}
             </p>
           </div>
-          <div class="flex px-8 py-2 bg-gray-300/20">
+          <div class="flex px-8 py-3 bg-gray-400/10">
             <RouterLink :to="`/user/${postData.user.uid}`">
               <img class="w-12 h-12 mr-4 rounded-full" :src="postData.user.avatar" alt="avatar">
             </RouterLink>
@@ -36,7 +36,7 @@
           </div>
           <div class="flex justify-center py-6">
             <button
-              class="flex flex-col items-center justify-center w-16 h-16 transition-colors border-2 border-gray-200 rounded-full hover:bg-gray-200"
+              class="flex flex-col items-center justify-center w-16 h-16 transition-colors border-2 border-gh-btn rounded-full hover:bg-gh-btn-hover"
               @click="handleLike"
             >
               <IconLikeSolid v-if="likeStatus" class="w-6 h-6 text-red-500" />
@@ -46,24 +46,25 @@
           </div>
         </div>
       </Transition>
-      <div id="comment" class="w-full px-4 pt-2 pb-8 my-2 overflow-hidden bg-white rounded-md">
+      <div id="comment" class="w-full px-4 pt-2 pb-8 my-2 overflow-hidden bg-transparent rounded-md border border-github">
         <h2>评论区</h2>
         <div>
           <div v-if="replyTo !== 0" class="mb-2">
             回复 {{ commentData.find((item) => item.cid === replyTo)?.user.nickname }}
           </div>
           <textarea
-            v-model="newCommentContent" class="w-full p-2 border rounded-md resize-none"
+            v-model="newCommentContent"
+            class="w-full p-2 border border-github rounded-md resize-none bg-github"
             :placeholder="allowComment ? '发一条友善的评论' : '评论区已关闭'" :disabled="!(allowComment && login)"
             @input="resetHeight($event.target as HTMLTextAreaElement)"
           />
-          <CommonButton v-if="login && allowComment" class="mr-2" primary @click="handleNewComment">
+          <CommonButton v-if="login && allowComment" class="mr-2" primary dark @click="handleNewComment">
             {{ replyTo === 0
               ? '发布'
               : '回复'
             }}
           </CommonButton>
-          <CommonButton v-if="replyTo !== 0" class="mr-2" @click="replyTo = 0">
+          <CommonButton v-if="replyTo !== 0" class="mr-2" dark @click="replyTo = 0">
             取消回复
           </CommonButton>
         </div>

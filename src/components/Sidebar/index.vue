@@ -1,13 +1,13 @@
 <template>
   <div
-    class="shadow-md relative transition-[width] bg-white"
+    class="shadow-md relative transition-[width] bg-gh-card border-r border-github"
     :class="{
       'w-0': !showSidebar,
       'w-[300px]': showSidebar,
     }"
   >
     <div
-      class="absolute w-[40px] top-2 right-[-40px] shadow-md p-2 rounded-r-lg bg-white cursor-pointer"
+      class="absolute w-[40px] top-2 right-[-40px] shadow-md p-2 rounded-r-lg bg-gh-btn hover:bg-gh-btn-hover cursor-pointer border border-gh-btn transition-colors"
       @click="showSidebar = !showSidebar"
     >
       <IconArrowLeft v-if="showSidebar" class="w-6 h-6" />
@@ -25,7 +25,6 @@
           class="text-lg"
           :class="{
             'text-blue-500': currentChapter === String(idx),
-            'text-black': currentChapter !== String(idx),
           }"
           @click="handleChangeChapter(`${idx}`, chapter.id, chapter.status)"
         >
@@ -36,7 +35,6 @@
           class="pl-4 cursor-pointer"
           :class="{
             'text-blue-500': currentChapter === `${idx}_${cidx}`,
-            'text-black': currentChapter !== `${idx}_${cidx}`,
           }"
           @click="handleChangeChapter(`${idx}_${cidx}`, child.id, child.status)"
         >

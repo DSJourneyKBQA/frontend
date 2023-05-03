@@ -1,5 +1,5 @@
 {
-  "name": "vue-template",
+  "name": "dsj-frontend",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@codemirror/language": "^6.6.0",
     "@codemirror/legacy-modes": "^6.3.2",
+    "@codemirror/theme-one-dark": "^6.1.2",
     "@vueuse/core": "^10.1.0",
     "axios": "^1.3.6",
     "codemirror": "^6.0.1",

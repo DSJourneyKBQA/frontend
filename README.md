@@ -1,14 +1,13 @@
-# Vue Template
+# DS Journey
 
-个人使用的 Vue 项目模板
+DS Journey 前端仓库
 
-## 包含
+技术栈：Vue3 + Vite+ TS + Pinia + Tailwind CSS
 
-- Vue，Vite，Vue Router，TypeScript
-- TailwindCSS
-- [antfu](https://github.com/antfu) 大佬开发的自动导入插件 [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import) 和 [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components) ，基于 Vite
-- ESLint，保存时自动格式化代码，规则使用 [antfu/eslint-config](https://github.com/antfu/eslint-config)
+## 其他仓库
 
-## 参考
+Web 服务器（nest.js）: [web-server](https://github.com/DSJourneyKBQA/web-server)
 
-[antfu/vitesse-lite](https://github.com/antfu/vitesse-lite)
+QA 服务器（flask）： [qa-server](https://github.com/DSJourneyKBQA/qa-server)
+
+OJ 服务器（springboot）：[oj-server](https://github.com/DSJourneyKBQA/oj-server)

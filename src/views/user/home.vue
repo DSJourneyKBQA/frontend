@@ -17,10 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import { useStore } from '@/store'
-
-const store = useStore()
-
 const canvasEl = ref<HTMLCanvasElement>()
 
 const max_particles = 100
@@ -40,7 +36,6 @@ window.onresize = () => {
 }
 
 onMounted(() => {
-  store.navTheme = 'dark'
   time_to_recreate = true
   setTimeout(() => {
     time_to_recreate = true
@@ -53,10 +48,6 @@ onMounted(() => {
   }
 
   update()
-})
-
-onUnmounted(() => {
-  store.navTheme = 'light'
 })
 
 class Particle {

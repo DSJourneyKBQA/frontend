@@ -6,7 +6,10 @@
       </p>
       <IconClose class="w-5 h-5 cursor-pointer" @click.stop="$emit('close')" />
     </div>
-    <div class="bg-gray-200 flex-1 mt-2 mb-4 rounded-md p-2">
+    <div
+      ref="msgContainer"
+      class="bg-github flex-1 mt-2 mb-4 rounded-lg p-2 border border-github overflow-y-auto"
+    >
       <template v-for="msg in msgList">
         <div v-if="msg.sender === 'bot'" :key="msg.createdAt" class="flex flex-row mb-2 justify-start">
           <img :src="msg.user.avatar" class="w-8 h-8 rounded-sm mr-2 shadow-md">
@@ -16,7 +19,7 @@
                 timestampToTime(msg.createdAt)
               }}</span>
             </p>
-            <div class="text-base w-fit rounded-md rounded-tl-none px-2 py-1 bg-white shadow-sm select-text">
+            <div class="text-sm w-fit rounded-md rounded-tl-none px-2 py-1 bg-gh-card border border-github shadow-sm select-text">
               {{ msg.text }}
             </div>
           </div>
@@ -37,7 +40,13 @@
       </template>
     </div>
     <div class="flex">
-      <input v-model="question" type="text" class="flex-1 outline-none px-2 hover:border-b focus:border-b focus:border-b-gray-400 transition-all" placeholder="请输入你的问题">
+      <input
+        v-model="question"
+        type="text"
+        class="flex-1 outline-none px-2 bg-github border border-gh-btn focus:border-gh-btn-hover transition-all rounded-lg"
+        placeholder="请输入你的问题"
+        @keydown.enter="submitQuestion"
+      >
       <button class="px-4 py-1 ml-2 rounded-md bg-blue-500 text-white" @click="submitQuestion">
         提交
       </button>
@@ -63,7 +72,9 @@ const msgList = ref([
     },
     text: '你好呀，我是分布式学习问答机器人，很高兴认识你',
     createdAt: Date.now(),
-  }])
+  },
+])
+const msgContainer = ref<HTMLDivElement>()
 
 function timestampToTime(timestamp: number) {
   // let date = new Date(timestamp * 1000); // 10位时间戳
@@ -91,6 +102,10 @@ function submitQuestion() {
     text: question.value,
     createdAt: Date.now(),
   })
+  nextTick(() => {
+    if (msgContainer.value)
+      msgContainer.value.scrollTo({ top: msgContainer.value.scrollHeight, behavior: 'smooth' })
+  })
   getAnswer(question.value)
   question.value = ''
 }
@@ -112,6 +127,10 @@ async function getAnswer(question: string) {
         },
         text: res.data.msg,
         createdAt: Date.now(),
+      })
+      nextTick(() => {
+        if (msgContainer.value)
+          msgContainer.value.scrollTo({ top: msgContainer.value.scrollHeight, behavior: 'smooth' })
       })
     })
 }

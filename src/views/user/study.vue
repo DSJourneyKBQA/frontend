@@ -11,7 +11,7 @@
         </div>
         <div class="rendered" v-html="renderMarkdown(chapterContent.content)" />
         <div v-if="!chapterContent.status" class="my-1">
-          <CommonButton primary @click="handleCompleteChapter">
+          <CommonButton primary dark @click="handleCompleteChapter">
             完成本章学习
           </CommonButton>
         </div>
@@ -21,26 +21,26 @@
       </div>
     </div>
     <div
-      class="h-full flex flex-col border-l transition-all relative" :class="{
+      class="h-full flex flex-col border-l transition-all relative border-github" :class="{
         'flex-1': showCodeEditor,
         'w-0': !showCodeEditor,
       }"
     >
       <div
         v-if="waitTestResult"
-        class="absolute w-full h-full top-0 left-0 flex flex-col items-center justify-center bg-black/10 z-50 select-none"
+        class="absolute w-full h-full top-0 left-0 flex flex-col items-center justify-center bg-white/10 z-50 select-none"
       >
-        <IconLoading class="w-20 h-20" />
+        <IconLoading class="w-20 h-20" :dark="false" />
         <div class="mt-4">
           等待运行结果
         </div>
       </div>
       <div class="h-[60%] flex flex-col">
-        <div class="border-b w-full flex justify-between">
-          <div class="p-2 border-r">
+        <div class="border-b border-github w-full flex justify-between">
+          <div class="p-2 border-r border-github">
             代码编辑器
           </div>
-          <div class="p-2 border-l hover:bg-gray-200 cursor-pointer" @click="showCodeEditor = false">
+          <div class="p-2 border-l border-github hover:bg-gh-btn-hover cursor-pointer transition-colors" @click="showCodeEditor = false">
             <IconClose class="w-5 h-5 inline-block" />
           </div>
         </div>
@@ -56,13 +56,13 @@
           />
         </div>
       </div>
-      <div class="h-[40%] border-t">
-        <div class="border-b flex">
-          <div class="p-2 border-r">
+      <div class="h-[40%] border-t border-github">
+        <div class="border-b border-github flex">
+          <div class="p-2 border-r border-github">
             运行结果
           </div>
-          <div class="p-2 border-r">
-            当前题目：<select v-model.number="selectTestIndex" class="outline-none">
+          <div class="p-2 border-r border-github">
+            题目：<select v-model.number="selectTestIndex" class="px-1 outline-none bg-gh-btn hover:bg-gh-btn-hover border border-gh-btn hover:border-gh-btn-hover rounded-lg transition-colors">
               <option value="-1">
                 未选中
               </option>
@@ -71,29 +71,29 @@
               </option>
             </select>
           </div>
-          <div class="p-2 border-r hover:bg-gray-200 cursor-pointer" @click="runTest">
+          <div class="p-2 border-r border-github hover:bg-gh-btn-hover cursor-pointer transition-colors" @click="runTest">
             运行<IconPlay class="w-5 h-5 inline-block" />
           </div>
-          <div class="p-2 border-r hover:bg-gray-200 cursor-pointer" @click="codeRunResult = ''">
-            清空<IconClose class="w-5 h-5 inline-block" />
+          <div class="p-2 border-r border-github hover:bg-gh-btn-hover cursor-pointer transition-colors" @click="codeRunResult = ''">
+            清空结果<IconClose class="w-5 h-5 inline-block" />
           </div>
         </div>
-        <textarea v-model="codeRunResult" class="w-full h-full resize-none outline-none p-2" readonly />
+        <textarea v-model="codeRunResult" class="w-full h-full resize-none outline-none p-2 bg-github" readonly />
       </div>
     </div>
-    <div class="absolute right-4 bottom-4 flex flex-col items-end">
+    <div class="absolute right-6 bottom-6 flex flex-col items-end">
       <div
         v-if="!showCodeEditor"
-        class="p-4 border shadow-lg bg-white rounded-[66px] w-[66px] h-[66px] hover:bg-gray-200 cursor-pointer transition-all duration-300 overflow-hidden mb-2"
+        class="p-4 bg-gh-btn hover:bg-gh-btn-hover border border-gh-btn shadow-lg rounded-[66px] w-[66px] h-[66px] cursor-pointer transition-all duration-300 overflow-hidden mb-2"
         @click="showCodeEditor = true"
       >
         <IconEdit class="w-8 h-8 text-blue-500" />
       </div>
       <div
-        class="p-4 border shadow-lg bg-white transition-all duration-300 overflow-hidden"
+        class="p-4 border border-gh-btn shadow-lg transition-all duration-300 overflow-hidden"
         :class="{
-          'rounded-[66px] w-[66px] h-[66px] hover:bg-gray-200 cursor-pointer': !showQABot,
-          'rounded-lg w-[400px] h-[600px]': showQABot,
+          'rounded-[66px] w-[66px] h-[66px] bg-gh-btn hover:bg-gh-btn-hover hover:border-gh-btn-hover cursor-pointer': !showQABot,
+          'rounded-lg w-[400px] h-[600px] bg-gh-card': showQABot,
         }"
         @click="showQABot = true"
       >
@@ -139,6 +139,7 @@
 import NProgress from 'nprogress'
 import { Codemirror } from 'vue-codemirror'
 import { StreamLanguage } from '@codemirror/language'
+import { oneDark } from '@codemirror/theme-one-dark'
 import { go } from '@codemirror/legacy-modes/mode/go'
 import { useToast } from 'vue-toastification'
 import { completeChapter, getChapterContent, getChapterList, submitTest } from '@/api/study'
@@ -150,7 +151,7 @@ const store = useStore()
 const toast = useToast()
 
 const colors = ['bg-red-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500', 'bg-indigo-500', 'bg-purple-500', 'bg-pink-500']
-const extensions = [StreamLanguage.define(go)]
+const extensions = [StreamLanguage.define(go), oneDark]
 
 const chapters = ref<ChapterData[]>([])
 const chapterContent = ref<ChapterContentData>()

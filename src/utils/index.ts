@@ -6,7 +6,7 @@ const rendererPost = new marked.Renderer()
 rendererPost.link = (href, title, text) =>
   `<a href=${href} target="_blank" class="relative px-1 z-10 hover:text-white after:link hover:after:link-hover transition-colors">${text}</a>`
 rendererPost.blockquote = quote =>
-  `<blockquote class="pl-4 pr-2 py-2 border-l-4 border-gray-300 bg-gray-300/20">${quote}</blockquote>`
+  `<blockquote class="pl-4 pr-2 py-2 border-l-4 border-gray-300/50 bg-gray-300/10">${quote}</blockquote>`
 
 marked.setOptions({
   highlight(code, lang) {

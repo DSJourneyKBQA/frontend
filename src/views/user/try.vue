@@ -1,7 +1,7 @@
 <template>
-  <div class="h-[calc(100vh-60px)] bg-[#1c2128] w-full flex">
+  <div class="h-[calc(100vh-60px)] w-full flex">
     <div class="flex-1 flex h-full items-center justify-center relative">
-      <div class="bg-[#22272e] w-[60px] h-full shrink-0 border-r border-[#373e47]">
+      <div class="bg-github-card w-[60px] h-full shrink-0 border-r border-github">
         <TryToolBarItem
           v-for="itemType in itemTypeList" :key="itemType.value"
           :title="itemType.label"
@@ -15,7 +15,7 @@
       </div>
       <div
         ref="canvasEl"
-        class="canvas bg-[#1c2128] flex-1 h-full overflow-hidden relative"
+        class="canvas flex-1 h-full overflow-hidden relative"
         @dblclick="boxSelectionCancel"
         @mousedown="boxSelectionStart"
         @mouseup="dragEnd()"
@@ -31,14 +31,14 @@
           <div
             v-if="!showTutorial"
             title="显示教程"
-            class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
+            class="mb-2 p-1.5 bg-gh-btn border border-gh-btn rounded-lg hover:border-gh-btn-hover hover:bg-gh-btn-hover cursor-pointer"
             @click="showTutorial = true"
           >
             <IconAcademic class="w-6 h-6" />
           </div>
           <div
             title="重置数据"
-            class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
+            class="mb-2 p-1.5 bg-gh-btn border border-gh-btn rounded-lg hover:border-gh-btn-hover hover:bg-gh-btn-hover cursor-pointer"
             @click="items = []"
           >
             <IconRefresh class="w-6 h-6" />
@@ -46,7 +46,7 @@
           <div
             v-if="items.filter((item) => item.select).length !== 0"
             title="删除选中服务"
-            class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
+            class="mb-2 p-1.5 bg-gh-btn border border-gh-btn rounded-lg hover:border-gh-btn-hover hover:bg-gh-btn-hover cursor-pointer"
             @click="deleteSelectedItems"
           >
             <IconTrash class="w-6 h-6" />
@@ -54,7 +54,7 @@
           <div
             v-if="items.filter((item) => item.select).length !== 0"
             title="启动选中服务"
-            class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
+            class="mb-2 p-1.5 bg-gh-btn border border-gh-btn rounded-lg hover:border-gh-btn-hover hover:bg-gh-btn-hover cursor-pointer"
             @click="startServiceBatch"
           >
             <IconCirclePlay class="w-6 h-6" />
@@ -62,7 +62,7 @@
           <div
             v-if="items.filter((item) => item.select).length !== 0"
             title="停止选中服务"
-            class="mb-2 p-1.5 bg-[#373e47] border border-[#444c56] text-[#a3bac7] rounded-lg hover:border-[#768390] hover:bg-[#444c56] cursor-pointer"
+            class="mb-2 p-1.5 bg-gh-btn border border-gh-btn rounded-lg hover:border-gh-btn-hover hover:bg-gh-btn-hover cursor-pointer"
             @click="stopServiceBatch"
           >
             <IconCircleStop class="w-6 h-6" />
@@ -96,40 +96,40 @@
       </div>
     </div>
     <div
-      class="bg-[#22272e] transition-[width] duration-300 relative overflow-hidden border-l border-[#373e47] text-white"
+      class="bg-gh-card transition-[width] duration-300 relative overflow-hidden border-l border-github"
       :class="{
         'w-[500px]': showInfoPanel,
         'w-0': !showInfoPanel,
       }"
     >
       <div v-if="selectIndex !== -1" class="w-[500px] h-full p-4 overflow-x-hidden overflow-y-auto flex flex-col">
-        <div class="rounded-md border border-[#768390] p-2 my-1">
+        <div class="rounded-md border border-github p-2 my-1">
           <div class="mb-2">
             类型：{{ items[selectIndex].type }}
           </div>
           <div>
             <template v-if="items[selectIndex].type !== ItemType.GatewayServer">
               <button
-                class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+                class="border px-2 py-0.5 mr-2 bg-gh-btn hover:bg-gh-btn-hover border-gh-btn hover:border-gh-btn-hover rounded-md"
                 @click="startService(items[selectIndex].id)"
               >
                 启动
               </button>
               <button
-                class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+                class="border px-2 py-0.5 mr-2 bg-gh-btn hover:bg-gh-btn-hover border-gh-btn hover:border-gh-btn-hover rounded-md"
                 @click="stopService(items[selectIndex].id)"
               >
                 关闭
               </button>
             </template>
             <button
-              class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+              class="border px-2 py-0.5 mr-2 bg-gh-btn hover:bg-gh-btn-hover border-gh-btn hover:border-gh-btn-hover rounded-md"
               @click="deleteItem(selectIndex)"
             >
               删除
             </button>
             <button
-              class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+              class="border px-2 py-0.5 mr-2 bg-gh-btn hover:bg-gh-btn-hover border-gh-btn hover:border-gh-btn-hover rounded-md"
               @click="clearLog"
             >
               清空日志
@@ -138,19 +138,19 @@
         </div>
 
         <div v-if="items[selectIndex].type === ItemType.GatewayServer">
-          <div class="rounded-md border border-[#768390] p-2 my-1">
+          <div class="rounded-md border border-github p-2 my-1">
             <div>
-              网关地址：<input v-model=" items[selectIndex].address " type="text" class="bg-transparent px-2 rounded-md border border-[#768390]">
+              网关地址：<input v-model=" items[selectIndex].address " type="text" class="bg-transparent px-2 rounded-md border border-github active:bg-gh-active">
             </div>
             <div class="mt-2">
               <button
-                class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+                class="border px-2 py-0.5 mr-2 bg-gh-btn hover:bg-gh-btn-hover border-gh-btn hover:border-gh-btn-hover rounded-md"
                 @click="connectGateway"
               >
                 连接网关
               </button>
               <button
-                class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+                class="border px-2 py-0.5 mr-2 bg-gh-btn hover:bg-gh-btn-hover border-gh-btn hover:border-gh-btn-hover rounded-md"
                 @click="disconnectGateway"
               >
                 断开网关
@@ -160,22 +160,22 @@
         </div>
 
         <div v-if="items[selectIndex].type === ItemType.ConfigServer">
-          <div class="rounded-md border border-[#768390] p-2 my-1">
+          <div class="rounded-md border border-github p-2 my-1">
             <div class="mb-2">
-              地址：<input v-model=" items[selectIndex].address" type="text" class="bg-transparent px-2 rounded-md border border-[#768390]">
+              地址：<input v-model=" items[selectIndex].address" type="text" class="bg-transparent px-2 rounded-md border border-github">
             </div>
             <div>
-              ID：<input v-model=" items[selectIndex].sid " type="text" class="bg-transparent px-2 rounded-md border border-[#768390]">
+              ID：<input v-model=" items[selectIndex].sid " type="text" class="bg-transparent px-2 rounded-md border border-github">
             </div>
           </div>
 
-          <div class="my-1 rounded-md border border-[#768390] p-2">
+          <div class="my-1 rounded-md border border-github p-2">
             <div
               v-for="gid in groupList" :key="gid"
               class="w-fit inline-block"
             >
-              <div class="rounded-md border border-[#768390]">
-                <div class="border-b border-[#768390] px-2 py-1">
+              <div class="rounded-md border border-github">
+                <div class="border-b border-github px-2 py-1">
                   Group: {{ gid }}
                 </div>
                 <div class="px-2 py-1">
@@ -187,14 +187,14 @@
             </div>
             <div class="mt-2">
               <button
-                class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+                class="border px-2 py-0.5 mr-2 bg-gh-btn hover:bg-gh-btn-hover border-gh-btn hover:border-gh-btn-hover rounded-md"
                 @click="setGroupInfo"
               >
                 设置分组信息
               </button>
             </div>
           </div>
-          <div class="rounded-md border border-[#768390] p-2">
+          <div class="rounded-md border border-github p-2">
             <div>
               路由表：
             </div>
@@ -207,7 +207,7 @@
             </div>
             <div class="mt-2">
               <button
-                class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+                class="border px-2 py-0.5 mr-2 bg-gh-btn hover:bg-gh-btn-hover border-gh-btn hover:border-gh-btn-hover rounded-md"
                 @click="setBucketInfo"
               >
                 设置路由表
@@ -217,27 +217,27 @@
         </div>
 
         <div v-if="items[selectIndex].type === ItemType.StorageServer">
-          <div class="rounded-md border border-[#768390] p-2 my-1">
+          <div class="rounded-md border border-github p-2 my-1">
             <div class="mb-2">
-              地址：<input v-model=" items[selectIndex].address " type="text" class="bg-transparent px-2 rounded-md border border-[#768390]">
+              地址：<input v-model=" items[selectIndex].address " type="text" class="bg-transparent px-2 rounded-md border border-github">
             </div>
             <div class="mb-2">
               Group：<select
                 v-model.number=" items[selectIndex].gid "
-                class="bg-transparent rounded-md border border-[#768390]"
+                class="bg-transparent rounded-md border border-github"
               >
-                <option v-for=" i in 10 " :key=" i " :value=" i " class="bg-[#22272e]">
+                <option v-for=" i in 10 " :key=" i " :value=" i " class="bg-gh-active">
                   {{ i }}
                 </option>
               </select>
             </div>
             <div>
-              ID：<input v-model=" items[selectIndex].sid " type="text" class="bg-transparent px-2 rounded-md border border-[#768390]">
+              ID：<input v-model=" items[selectIndex].sid " type="text" class="bg-transparent px-2 rounded-md border border-github">
             </div>
           </div>
-          <div class="rounded-md border border-[#768390] p-2 my-1">
+          <div class="rounded-md border border-github p-2 my-1">
             <button
-              class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+              class="border px-2 py-0.5 mr-2 bg-gh-btn hover:bg-gh-btn-hover border-gh-btn hover:border-gh-btn-hover rounded-md"
               @click="queryBucketsContent"
             >
               查询
@@ -246,22 +246,22 @@
         </div>
 
         <div v-if=" items[selectIndex].type === ItemType.Client ">
-          <div class="rounded-md border border-[#768390] p-2 my-1">
+          <div class="rounded-md border border-github p-2 my-1">
             <div class="mb-2">
-              key: <input v-model="clientConfig.key" type="text" class="bg-transparent px-2 rounded-md border border-[#768390]">
+              key: <input v-model="clientConfig.key" type="text" class="bg-transparent px-2 rounded-md border border-github">
             </div>
             <div>
-              value: <input v-model="clientConfig.value" type="text" class="bg-transparent px-2 rounded-md border border-[#768390]">
+              value: <input v-model="clientConfig.value" type="text" class="bg-transparent px-2 rounded-md border border-github">
             </div>
             <div class="mt-2">
               <button
-                class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+                class="border px-2 py-0.5 mr-2 bg-gh-btn hover:bg-gh-btn-hover border-gh-btn hover:border-gh-btn-hover rounded-md"
                 @click="setStorageKv"
               >
                 Put
               </button>
               <button
-                class="border px-2 py-0.5 mr-2 bg-[#373e47] hover:bg-[#444c56] border-[#464e57] hover:border-[#768390] rounded-md"
+                class="border px-2 py-0.5 mr-2 bg-gh-btn hover:bg-gh-btn-hover border-gh-btn hover:border-gh-btn-hover rounded-md"
                 @click="getStorageKv"
               >
                 Get
@@ -272,10 +272,10 @@
         <div class="my-1">
           Service层日志
         </div>
-        <div ref="serviceLogEl" class="flex flex-1 overflow-y-auto flex-col p-1 border border-[#768390] rounded-md min-h-[200px]">
+        <div ref="serviceLogEl" class="flex flex-1 overflow-y-auto flex-col p-1 border border-github rounded-md min-h-[200px]">
           <div
             v-for="log, index in serviceLogs" :key="index"
-            class="border-b border-[#768390] py-1 text-sm break-words"
+            class="border-b border-github py-1 text-sm break-words"
           >
             <div class="text-green-400">
               {{ formatTimeMs(log.timestamp) }} {{ log.type }}
@@ -286,10 +286,10 @@
         <div class="my-1">
           Raft层日志
         </div>
-        <div ref="raftLogEl" class="flex flex-1 overflow-y-auto flex-col p-1 border border-[#768390] rounded-md min-h-[200px]">
+        <div ref="raftLogEl" class="flex flex-1 overflow-y-auto flex-col p-1 border border-github rounded-md min-h-[200px]">
           <div
             v-for="log, index in raftLogs" :key="index"
-            class="border-b border-[#768390] py-1 text-sm break-words"
+            class="border-b border-github py-1 text-sm break-words"
           >
             <div class="text-green-400">
               {{ formatTimeMs(log.timestamp) }} {{ log.type }}
@@ -307,12 +307,10 @@ import { useToast } from 'vue-toastification'
 import { nanoid } from 'nanoid'
 import { bucketSize, itemTypeList } from '@/config'
 import { ItemType } from '@/enums'
-import { useStore } from '@/store'
 import type { CanvasItem, LogData } from '@/types'
 import { gatewayDisconnect, gatewayStartService, gatewayStopService, getKv, putKv, queryBuckets, setGroup, updateBucket } from '@/api/try'
 import { formatTimeMs } from '@/utils'
 
-const store = useStore()
 const toast = useToast()
 
 const configLoaded = ref(false)
@@ -382,7 +380,6 @@ onMounted(() => {
     bucketConfig.value = Array.from({ length: bucketSize }, () => 1)
   showTutorial.value = (localStorage.getItem('showTutorial') || 'true') === 'true'
   configLoaded.value = true
-  store.navTheme = 'dark'
   setInterval(() => {
     serviceLogs.value = serviceLogs.value.slice(-100)
     raftLogs.value = raftLogs.value.slice(-100)
@@ -390,7 +387,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  store.navTheme = 'light'
   disconnectGateway()
 })
 
