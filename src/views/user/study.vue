@@ -57,7 +57,7 @@
           />
         </div>
       </div>
-      <div class="h-[40%] border-t border-github">
+      <div class="h-[40%] border-t border-github flex flex-col">
         <div class="border-b border-github flex">
           <div class="p-2 border-r border-github">
             运行结果
@@ -81,13 +81,32 @@
           </div>
           <div
             class="p-2 border-r border-github hover:bg-gh-btn-hover cursor-pointer transition-colors"
-            @click="codeRunResult = ''"
+            @click="testResult = []"
           >
             清空结果
             <IconClose class="w-5 h-5 inline-block" />
           </div>
         </div>
-        <textarea v-model="codeRunResult" class="w-full h-full resize-none outline-none p-2 bg-github" readonly />
+        <div ref="resultContainer" class="w-full flex-1 p-2 bg-github overflow-y-auto">
+          <div
+            v-for="result, index in testResult" :key="index"
+            class="p-2 border-t border-github"
+          >
+            <div v-if="result.code === 0" class="text-green-400">
+              {{ formatTime(result.timestamp) }} 运行成功
+            </div>
+            <div v-if="result.code === 1" class="text-red-400">
+              {{ formatTime(result.timestamp) }} 编译失败
+            </div>
+            <div v-if="result.code === 2" class="text-yellow-400">
+              {{ formatTime(result.timestamp) }} 运行超时
+            </div>
+            <div v-if="result.code === -1" class="text-red-400">
+              {{ formatTime(result.timestamp) }} 未知错误
+            </div>
+            {{ result.msg }}
+          </div>
+        </div>
       </div>
     </div>
     <div class="absolute right-6 bottom-6 flex flex-col items-end">
@@ -123,8 +142,8 @@ import { DataSet, Network } from 'vis-network/standalone'
 import axios from 'axios'
 import { completeChapter, getChapterContent, getChapterList, submitTest } from '@/api/study'
 import { useStore } from '@/store'
-import type { ChapterContentData, ChapterData, TestData } from '@/types'
-import { parseTest, renderMarkdown } from '@/utils'
+import type { ChapterContentData, ChapterData, TestData, TestResultData } from '@/types'
+import { formatTime, parseTest, renderMarkdown } from '@/utils'
 import { qaBaseURL } from '@/config'
 
 const store = useStore()
@@ -137,10 +156,11 @@ const chapterContent = ref<ChapterContentData>()
 const testList = ref<TestData[]>([])
 const selectTestIndex = ref(-1)
 const code = ref('')
-const codeRunResult = ref('')
+const testResult = ref<TestResultData[]>([])
 const showQABot = ref(false)
 const showCodeEditor = ref(false)
 const waitTestResult = ref(false)
+const resultContainer = ref<HTMLDivElement>()
 
 let network: Network
 
@@ -339,7 +359,11 @@ function runTest() {
   waitTestResult.value = true
   submitTest(store.token, testList.value[selectTestIndex.value].id, code.value)
     .then((res: any) => {
-      codeRunResult.value = JSON.stringify(res)
+      testResult.value.push({ ...res, timestamp: Date.now() })
+      nextTick(() => {
+        if (resultContainer.value)
+          resultContainer.value.scrollTo({ top: resultContainer.value.scrollHeight, behavior: 'smooth' })
+      })
     })
     .catch((err: Error) => {
       toast.error(err.message)

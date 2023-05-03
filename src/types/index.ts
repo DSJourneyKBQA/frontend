@@ -156,3 +156,10 @@ export interface LogData {
   type: string
   raw: string
 }
+
+export interface TestResultData {
+  code: number
+  msg: string
+  data: any
+  timestamp: number
+}
