@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full bg-gray-100 my-2 rounded-[12px] overflow-hidden">
+  <div class="w-full bg-gh-card my-2 rounded-[12px] overflow-hidden border border-github">
     <div class="flex pt-6 px-4">
       <div class="w-full flex flex-row justify-between">
         <div class="text-gray-500 flex items-center">
@@ -9,9 +9,11 @@
         </div>
         <div v-if="editMode">
           <RouterLink class="mr-1" :to="`/blog/post/edit/${postData.pid}`">
-            <CommonButton>编辑</CommonButton>
+            <CommonButton dark>
+              编辑
+            </CommonButton>
           </RouterLink>
-          <CommonButton @click="emits('delete', postData.pid)">
+          <CommonButton dark @click="emits('delete', postData.pid)">
             删除
           </CommonButton>
         </div>

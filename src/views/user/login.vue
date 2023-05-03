@@ -1,31 +1,31 @@
 <template>
   <div class="w-full">
-    <div class="w-full md:w-[400px] bg-white mt-4 mx-auto px-8 pt-2 pb-6 rounded-[10px] overflow-hidden shadow-sm">
+    <div class="w-full md:w-[400px] bg-gh-card border border-github mt-4 mx-auto px-8 pt-2 pb-6 rounded-[10px] overflow-hidden shadow-sm">
       <template v-if="!isRegister">
         <h1 class="text-center">
           用户登录
         </h1>
-        <div class="border rounded-md mt-10">
-          <div class="flex items-center pl-3 border-b">
+        <div class="border border-github rounded-md mt-10">
+          <div class="flex items-center pl-3 border-b border-github">
             <span class="w-[50px]">用户名</span>
             <input
-              v-model="loginParams.username" v-focus class="flex-1 h-[40px] px-3 outline-none" type="text"
+              v-model="loginParams.username" v-focus class="flex-1 h-[40px] px-3 outline-none bg-gh-card" type="text"
               placeholder="请输入用户名" maxlength="12"
             >
           </div>
           <div class="flex items-center pl-3">
             <span class="w-[50px]">密码</span>
             <input
-              v-model="loginParams.password" class="flex-1 h-[40px] px-3 outline-none" type="password" placeholder="请输入密码"
+              v-model="loginParams.password" class="flex-1 h-[40px] px-3 outline-none bg-gh-card" type="password" placeholder="请输入密码"
               maxlength="36" @keydown.enter="handleLogin"
             >
           </div>
         </div>
         <div class="flex flex-col justify-center mt-10">
-          <CommonButton primary @click="handleLogin">
+          <CommonButton primary dark @click="handleLogin">
             登录
           </CommonButton>
-          <CommonButton class="mt-2" @click="isRegister = true">
+          <CommonButton dark class="mt-2" @click="isRegister = true">
             前往注册
           </CommonButton>
         </div>
@@ -34,12 +34,12 @@
         <h1 class="text-center">
           用户注册
         </h1>
-        <div class="border rounded-md mt-10">
-          <div class="px-3 border-b">
+        <div class="border border-github rounded-md mt-10">
+          <div class="px-3 border-b border-github">
             <div class="flex items-center">
               <span class="w-[50px] shrink-0">用户名</span>
               <input
-                v-model="registerParams.username" class="flex-1 h-[40px] px-3 outline-none" type="text"
+                v-model="registerParams.username" class="flex-1 h-[40px] px-3 outline-none bg-gh-card" type="text"
                 placeholder="请输入用户名"
               >
             </div>
@@ -47,11 +47,11 @@
               用户名由小写字母、数字、下划线组成，长度5-12字符
             </div>
           </div>
-          <div class="px-3 border-b">
+          <div class="px-3 border-b border-github">
             <div class="flex items-center">
               <span class="w-[50px] shrink-0">昵称</span>
               <input
-                v-model="registerParams.nickname" class="flex-1 h-[40px] px-3 outline-none" type="text"
+                v-model="registerParams.nickname" class="flex-1 h-[40px] px-3 outline-none bg-gh-card" type="text"
                 placeholder="请输入昵称"
               >
             </div>
@@ -59,11 +59,11 @@
               昵称长度2-20字符
             </div>
           </div>
-          <div class="px-3 border-b">
+          <div class="px-3 border-b border-github">
             <div class="flex items-center">
               <span class="w-[50px] shrink-0">邮箱</span>
               <input
-                v-model="registerParams.email" class="flex-1 h-[40px] px-3 outline-none" type="email"
+                v-model="registerParams.email" class="flex-1 h-[40px] px-3 outline-none bg-gh-card" type="email"
                 placeholder="请输入邮箱"
               >
             </div>
@@ -71,11 +71,11 @@
               邮箱格式不正确
             </div>
           </div>
-          <div class="px-3 border-b">
+          <div class="px-3 border-b border-github">
             <div class="flex items-center">
               <span class="w-[50px] shrink-0">密码</span>
               <input
-                v-model="registerParams.password" class="flex-1 h-[40px] px-3 outline-none" type="password"
+                v-model="registerParams.password" class="flex-1 h-[40px] px-3 outline-none bg-gh-card" type="password"
                 placeholder="请输入密码"
               >
             </div>
@@ -103,10 +103,10 @@
             保密</label>
         </div>
         <div class="flex flex-col justify-center mt-10">
-          <CommonButton primary @click="handleRegister">
+          <CommonButton primary dark @click="handleRegister">
             注册
           </CommonButton>
-          <CommonButton class="mt-2" @click="isRegister = false">
+          <CommonButton dark class="mt-2" @click="isRegister = false">
             返回登录
           </CommonButton>
         </div>

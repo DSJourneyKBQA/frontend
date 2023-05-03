@@ -1,6 +1,6 @@
 <template>
   <div class="w-full lg:w-[700px] xl:w-[1024px] mx-auto py-4">
-    <div class="w-full bg-white my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4">
+    <div class="w-full bg-gh-card my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4">
       <h2>编辑文章</h2>
       <slot name="loading" />
       <div v-if="postData">
@@ -8,19 +8,19 @@
           标题
         </p>
         <input
-          v-model="postData.title" class="w-full p-2 rounded-md border hover:border-blue-500 transition-colors"
+          v-model="postData.title" class="w-full p-2 rounded-md bg-github border border-github transition-colors"
           type="text"
         >
         <p class="my-2 font-bold">
           内容
         </p>
         <EditorNormal v-if="setting.legacyEditor" v-model="postData.text" />
-        <EditorMarkdown v-else v-model="postData.text" class="!h-[calc(100vh-400px)]" />
+        <EditorMarkdown v-else v-model="postData.text" dark class="!h-[calc(100vh-400px)]" />
         <div class="mt-2">
-          <CommonButton primary @click="handleSavePost">
+          <CommonButton primary dark @click="handleSavePost">
             保存修改
           </CommonButton>
-          <CommonButton @click="router.back()">
+          <CommonButton dark @click="router.back()">
             取消
           </CommonButton>
         </div>

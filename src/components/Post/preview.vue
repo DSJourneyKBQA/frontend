@@ -67,8 +67,10 @@ const toast = useToast()
 const { login, likeCache } = toRefs(store)
 const likeStatus = ref(false)
 
-if (login.value)
-  likeStatus.value = likeCache.value.POST.includes(props.postData.pid.toString())
+onMounted(() => {
+  if (login.value)
+    likeStatus.value = likeCache.value.POST.includes(props.postData.pid.toString())
+})
 
 function btnClickLike() {
   if (!login.value) {

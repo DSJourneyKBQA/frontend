@@ -1,7 +1,11 @@
 <template>
   <div class="w-full flex justify-center">
     <button
-      class="bg-gray-200 flex justify-center items-center px-2 py-1 mr-2 rounded-md hover:text-blue-500 hover:bg-gray-300/70 transition-colors  "
+      class="flex justify-center items-center px-2 py-1 mr-2 rounded-lg transition-colors"
+      :class="{
+        'bg-gray-200 hover:bg-gray-300/70 hover:text-blue-500': !props.dark,
+        'bg-gh-btn border border-gh-btn hover:bg-gh-btn-hover hover:border-gh-btn-hover': props.dark,
+      }"
       @click="handleBtnPrev"
     >
       <svg
@@ -21,7 +25,11 @@
       </span>
     </div>
     <button
-      class="bg-gray-200 flex justify-center items-center px-2 py-1 mr-2 rounded-md hover:text-blue-500 hover:bg-gray-300/70 transition-colors  "
+      class="flex justify-center items-center px-2 py-1 mr-2 rounded-lg transition-colors"
+      :class="{
+        'bg-gray-200 hover:bg-gray-300/70 hover:text-blue-500': !props.dark,
+        'bg-gh-btn border border-gh-btn hover:bg-gh-btn-hover hover:border-gh-btn-hover': props.dark,
+      }"
       @click="handleBtnNext"
     >
       <svg
@@ -41,6 +49,7 @@ const props = defineProps<{
   currentPage: number
   totalCount: number
   pageSize: number
+  dark?: boolean
 }>()
 
 const emits = defineEmits(['change'])

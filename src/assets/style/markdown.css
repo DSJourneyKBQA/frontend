@@ -9,3 +9,16 @@ code.hljs {
 .rendered>* {
   @apply my-2;
 }
+
+.rendered tr {
+  @apply border-t border-github;
+}
+
+.rendered td,
+.rendered th {
+  @apply border border-github px-4 py-2;
+}
+
+.rendered   tr:nth-child(2n) {
+    @apply bg-github
+  }

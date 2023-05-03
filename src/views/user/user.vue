@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full lg:w-[700px] xl:w-[1024px] mx-auto">
+  <div class="w-full lg:w-[700px] xl:w-[1024px] mx-auto py-4">
     <div class="w-full bg-gh-card border border-github my-2 rounded-md overflow-hidden shadow-sm px-4 pt-2 pb-4 relative">
       <div v-if="enableEditMode" class="absolute top-4 right-4">
         <CommonButton dark @click="handleGoAdmin">
@@ -47,6 +47,7 @@
           @delete="handleDeletePost"
         />
         <CommonPagination
+          dark
           :current-page="currentPage" :total-count="postCount" :page-size="pageSize"
           @change="handlePageChange"
         />

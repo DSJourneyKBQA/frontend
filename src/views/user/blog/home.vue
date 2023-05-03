@@ -11,7 +11,7 @@
           @like-add="handleLikeChange($event, true)"
           @like-reduce="handleLikeChange($event, false)"
         />
-        <CommonPagination :current-page="currentPage" :total-count="postCount" :page-size="pageSize" @change="handlePageChange" />
+        <CommonPagination dark :current-page="currentPage" :total-count="postCount" :page-size="pageSize" @change="handlePageChange" />
       </div>
     </Transition>
   </div>
