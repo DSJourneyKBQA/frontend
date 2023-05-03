@@ -114,7 +114,7 @@ async function fetchData() {
       userProfile.value = profile.userInfo
       userPosts.value = posts.posts
       postCount.value = posts.count
-      document.title = `${userProfile.value?.nickname}的主页 - 分布式学习系统`
+      document.title = `${userProfile.value?.nickname}的主页 - 分布式体验与学习平台`
     })
     .catch((err) => {
       toast.error(err.message)

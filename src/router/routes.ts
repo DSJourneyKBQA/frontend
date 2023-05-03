@@ -148,11 +148,17 @@ const routes: RouteRecordRaw[] = [
         path: 'blog',
         name: 'blog-home',
         component: () => import('@/views/user/blog/home.vue'),
+        meta: {
+          title: '博客',
+        },
       },
       {
         path: 'blog/post/:pid',
         name: 'blog-post',
         component: () => import('@/views/user/blog/post.vue'),
+        meta: {
+          title: '博客',
+        },
       },
       {
         path: 'blog/post/edit/:pid',
@@ -176,11 +182,9 @@ const routes: RouteRecordRaw[] = [
         path: 'login',
         name: 'login',
         component: () => import('@/views/user/login.vue'),
-      },
-      {
-        path: 'test',
-        name: 'test',
-        component: () => import('@/views/user/test.vue'),
+        meta: {
+          title: '用户登录',
+        },
       },
     ],
   },

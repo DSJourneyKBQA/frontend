@@ -57,6 +57,7 @@
 <script setup lang="ts">
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
+import { qaBaseURL } from '@/config'
 
 defineEmits(['close'])
 
@@ -111,7 +112,7 @@ function submitQuestion() {
 }
 
 async function getAnswer(question: string) {
-  axios.post('http://localhost:3001/api/answer', {
+  axios.post(`${qaBaseURL}/api/answer`, {
     question,
   }, {
     headers: {

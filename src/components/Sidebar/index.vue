@@ -7,7 +7,7 @@
     }"
   >
     <div
-      class="absolute w-[40px] top-2 right-[-40px] shadow-md p-2 rounded-r-lg bg-gh-btn hover:bg-gh-btn-hover cursor-pointer border border-gh-btn transition-colors"
+      class="absolute w-[40px] top-2 right-[-40px] shadow-md p-2 rounded-r-lg bg-gh-btn hover:bg-gh-btn-hover cursor-pointer border border-gh-btn transition-colors z-50"
       @click="showSidebar = !showSidebar"
     >
       <IconArrowLeft v-if="showSidebar" class="w-6 h-6" />

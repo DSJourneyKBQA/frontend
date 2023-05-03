@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-[calc(100vh-60px)] overflow-hidden">
     <Sidebar :data="chapters" @change-chapter="handleChangeChapter" />
-    <div class="flex-1 p-4 h-full overflow-y-auto">
+    <div class="flex-1 h-full overflow-y-auto relative">
       <div v-if="chapterContent" class="px-16">
         <h2 class="text-3xl">
           {{ chapterContent.title }}
@@ -16,9 +16,12 @@
           </CommonButton>
         </div>
       </div>
-      <div v-else class="text-center">
-        请选择章节
+      <div class="w-full h-full relative overflow-hidden">
+        <!-- <div class="noite" /> -->
+        <div class="constelacao" />
+        <div class="chuvaMeteoro" />
       </div>
+      <div v-show="!chapterContent" id="visnetwork" class="w-full h-full absolute top-0 left-0" />
     </div>
     <div
       class="h-full flex flex-col border-l transition-all relative border-github" :class="{
@@ -40,19 +43,17 @@
           <div class="p-2 border-r border-github">
             代码编辑器
           </div>
-          <div class="p-2 border-l border-github hover:bg-gh-btn-hover cursor-pointer transition-colors" @click="showCodeEditor = false">
+          <div
+            class="p-2 border-l border-github hover:bg-gh-btn-hover cursor-pointer transition-colors"
+            @click="showCodeEditor = false"
+          >
             <IconClose class="w-5 h-5 inline-block" />
           </div>
         </div>
         <div class="flex-1 overflow-y-auto">
           <Codemirror
-            v-model="code"
-            placeholder="请输入代码"
-            class="w-full"
-            :autofocus="true"
-            :tab-size="2"
-            :indent-with-tab="true"
-            :extensions="extensions"
+            v-model="code" placeholder="请输入代码" class="w-full" :autofocus="true" :tab-size="2"
+            :indent-with-tab="true" :extensions="extensions"
           />
         </div>
       </div>
@@ -62,7 +63,10 @@
             运行结果
           </div>
           <div class="p-2 border-r border-github">
-            题目：<select v-model.number="selectTestIndex" class="px-1 outline-none bg-gh-btn hover:bg-gh-btn-hover border border-gh-btn hover:border-gh-btn-hover rounded-lg transition-colors">
+            题目：<select
+              v-model.number="selectTestIndex"
+              class="px-1 outline-none bg-gh-btn hover:bg-gh-btn-hover border border-gh-btn hover:border-gh-btn-hover rounded-lg transition-colors"
+            >
               <option value="-1">
                 未选中
               </option>
@@ -72,10 +76,15 @@
             </select>
           </div>
           <div class="p-2 border-r border-github hover:bg-gh-btn-hover cursor-pointer transition-colors" @click="runTest">
-            运行<IconPlay class="w-5 h-5 inline-block" />
+            运行
+            <IconPlay class="w-5 h-5 inline-block" />
           </div>
-          <div class="p-2 border-r border-github hover:bg-gh-btn-hover cursor-pointer transition-colors" @click="codeRunResult = ''">
-            清空结果<IconClose class="w-5 h-5 inline-block" />
+          <div
+            class="p-2 border-r border-github hover:bg-gh-btn-hover cursor-pointer transition-colors"
+            @click="codeRunResult = ''"
+          >
+            清空结果
+            <IconClose class="w-5 h-5 inline-block" />
           </div>
         </div>
         <textarea v-model="codeRunResult" class="w-full h-full resize-none outline-none p-2 bg-github" readonly />
@@ -90,49 +99,16 @@
         <IconEdit class="w-8 h-8 text-blue-500" />
       </div>
       <div
-        class="p-4 border border-gh-btn shadow-lg transition-all duration-300 overflow-hidden"
-        :class="{
+        class="p-4 border border-gh-btn shadow-lg transition-all duration-300 overflow-hidden" :class="{
           'rounded-[66px] w-[66px] h-[66px] bg-gh-btn hover:bg-gh-btn-hover hover:border-gh-btn-hover cursor-pointer': !showQABot,
           'rounded-lg w-[400px] h-[600px] bg-gh-card': showQABot,
-        }"
-        @click="showQABot = true"
+        }" @click="showQABot = true"
       >
         <KBQA v-if="showQABot" @close="showQABot = false" />
         <IconChat v-if="!showQABot" class="w-8 h-8 text-blue-500" />
       </div>
     </div>
   </div>
-  <!-- <div class="p-8">
-    <div class="text-3xl font-bold py-4">
-      选择学习章节
-    </div>
-    <div class="text-2xl font-bold my-3">
-      初识分布式
-    </div>
-    <div class="flex flex-wrap">
-      <div
-        v-for="chapter, index in chapters" :key="index"
-        class="relative border w-[200px] h-[300px] flex justify-center items-center m-4 bg-white rounded-xl shadow-xl hover:text-white hover:shadow-2xl hover:-translate-y-2 text-xl hover:text-3xl transition-all duration-300 cursor-pointer overflow-hidden"
-        :class="colors[index % colors.length]"
-      >
-        <div class="z-10">
-          {{ chapter.name }}
-        </div>
-        <div class="absolute w-full h-full bg-transparent hover:bg-black/40 transition-colors duration-300 z-0" />
-      </div>
-    </div>
-    <div class="text-2xl font-bold my-3">
-      初识分布式
-    </div>
-    <div class="flex flex-wrap">
-      <div
-        v-for="chapter, index in chapters" :key="index"
-        class="border w-[200px] h-[300px] flex justify-center items-center m-4 bg-white rounded-xl shadow-xl hover:shadow-2xl hover:-translate-y-2 text-xl hover:text-3xl transition-all duration-300 cursor-pointer"
-      >
-        {{ chapter.name }}
-      </div>
-    </div>
-  </div> -->
 </template>
 
 <script setup  lang="ts">
@@ -142,15 +118,18 @@ import { StreamLanguage } from '@codemirror/language'
 import { oneDark } from '@codemirror/theme-one-dark'
 import { go } from '@codemirror/legacy-modes/mode/go'
 import { useToast } from 'vue-toastification'
+import type { Options as VisOption } from 'vis-network/standalone'
+import { DataSet, Network } from 'vis-network/standalone'
+import axios from 'axios'
 import { completeChapter, getChapterContent, getChapterList, submitTest } from '@/api/study'
 import { useStore } from '@/store'
 import type { ChapterContentData, ChapterData, TestData } from '@/types'
 import { parseTest, renderMarkdown } from '@/utils'
+import { qaBaseURL } from '@/config'
 
 const store = useStore()
 const toast = useToast()
 
-const colors = ['bg-red-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500', 'bg-indigo-500', 'bg-purple-500', 'bg-pink-500']
 const extensions = [StreamLanguage.define(go), oneDark]
 
 const chapters = ref<ChapterData[]>([])
@@ -163,9 +142,100 @@ const showQABot = ref(false)
 const showCodeEditor = ref(false)
 const waitTestResult = ref(false)
 
+let network: Network
+
+const nodes = new DataSet([])
+
+const edges = new DataSet([])
+
+const data = {
+  nodes,
+  edges,
+}
+
+const options: VisOption = {
+  nodes: {
+    shape: 'image',
+    // color: {
+    //   background: '#3b82f6',
+    //   border: '#444c56',
+    // },
+    font: {
+      color: '#fff',
+    },
+  },
+  edges: {
+    length: 200,
+    color: {
+      color: '#ffffff5e',
+      highlight: '#ffffff5e',
+    },
+    arrows: {
+      to: {
+        enabled: true,
+      },
+    },
+  },
+  interaction: {
+    hover: true,
+  },
+}
+const _nodeNames: string[] = []
+
 onMounted(async () => {
   fetchData()
+  const container = document.getElementById('visnetwork')
+  if (container)
+    network = new Network(container, data, options)
+  network?.on('click', (properties) => {
+    toast.info(JSON.stringify(properties.nodes))
+  })
+  drawBackground()
 })
+
+function drawBackground() {
+  // estrelas
+
+  const style = ['style1', 'style2', 'style3', 'style4']
+  const tam = ['tam1', 'tam1', 'tam1', 'tam2', 'tam3']
+  const opacity = ['opacity1', 'opacity1', 'opacity1', 'opacity2', 'opacity2', 'opacity3']
+
+  function getRandomArbitrary(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min)) + min
+  }
+
+  let estrela = ''
+  const qtdeEstrelas = 250
+  const noite = document.querySelector('.constelacao')
+  const widthWindow = window.innerWidth
+  const heightWindow = window.innerHeight
+
+  for (let i = 0; i < qtdeEstrelas; i++) {
+    estrela += `<span class='estrela ${style[getRandomArbitrary(0, 4)]} ${opacity[getRandomArbitrary(0, 6)]} ${
+         tam[getRandomArbitrary(0, 5)]}' style='animation-delay: .${getRandomArbitrary(0, 9)}s; left: ${
+         getRandomArbitrary(0, widthWindow)}px; top: ${getRandomArbitrary(0, heightWindow)}px;'></span>`
+  }
+
+  noite && (noite.innerHTML = estrela)
+
+  // meteoros
+
+  let numeroAleatorio = 5000
+
+  setTimeout(() => {
+    carregarMeteoro()
+  }, numeroAleatorio)
+
+  function carregarMeteoro() {
+    setTimeout(carregarMeteoro, numeroAleatorio)
+    numeroAleatorio = getRandomArbitrary(5000, 10000)
+    const meteoro = `<div class='meteoro ${style[getRandomArbitrary(0, 4)]}'></div>`
+    document.getElementsByClassName('chuvaMeteoro')[0].innerHTML = meteoro
+    setTimeout(() => {
+      document.getElementsByClassName('chuvaMeteoro')[0].innerHTML = ''
+    }, 1000)
+  }
+}
 
 watchEffect(() => {
   if (selectTestIndex.value !== -1)
@@ -180,6 +250,44 @@ function fetchData() {
     }).finally(() => {
       NProgress.done()
     })
+  getRoadmapData()
+    .then((res) => {
+      network.redraw()
+      const _nodes: any[] = res.data.data.nodes
+      const _rels: any[] = res.data.data.rels
+      const addNodes: any[] = []
+
+      _nodes.forEach((node, index) => {
+        addNodes.push({
+          id: index,
+          label: node.name,
+          image: `/star.${node.type}.png`,
+        })
+        _nodeNames.push(node.name)
+      })
+      nodes.add(addNodes as never[])
+
+      for (const rel of _rels) {
+        if (rel.type === 'require') {
+          edges.add([{
+            from: _nodeNames.indexOf(rel.end),
+            to: _nodeNames.indexOf(rel.start),
+            value: 4,
+          }] as never[])
+        }
+        else {
+          edges.add([{
+            from: _nodeNames.indexOf(rel.start),
+            to: _nodeNames.indexOf(rel.end),
+            value: 2,
+          }] as never[])
+        }
+      }
+    })
+}
+
+async function getRoadmapData() {
+  return axios.get(`${qaBaseURL}/api/roadmap`)
 }
 
 function handleChapterData(data: any): ChapterData[] {
@@ -221,6 +329,10 @@ function runTest() {
     toast.warning('不可提交空代码')
     return
   }
+  if (selectTestIndex.value === -1) {
+    toast.warning('请先选择题目')
+    return
+  }
   waitTestResult.value = true
   submitTest(store.token, testList.value[selectTestIndex.value].id, code.value)
     .then((res: any) => {
@@ -251,3 +363,160 @@ function handleCompleteChapter() {
     })
 }
 </script>
+
+<style>
+.title {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 50%;
+  color: #ffffff;
+  font-weight: 100;
+  font-size: 3em;
+  font-family: 'Pacifico', cursive;
+}
+
+.noite {
+  background: -webkit-linear-gradient(top, rgb(0, 0, 0) 50%, rgb(25, 19, 39)80%, rgb(43, 32, 72));
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+}
+
+.constelacao {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  animation: rotate 600s infinite linear;
+}
+
+.estrela {
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  animation-name: estrela;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.estrela.style1 { animation-duration: 0.5s; animation-name: estrela; }
+.estrela.style2 { animation-duration: 1s; animation-name: estrela; }
+.estrela.style3 { animation-duration: 1.5s; animation-name: estrela; }
+.estrela.style4 { animation-duration: 2s; animation-name: estrelaDestacada; }
+
+.estrela.tam1 { width: 1px; height: 1px; }
+.estrela.tam2 { width: 2px; height: 2px; }
+.estrela.tam3 { width: 3px; height: 3px; }
+
+.estrela.opacity1 { opacity:  1; }
+.estrela.opacity2 { opacity: .5; }
+.estrela.opacity3 { opacity: .1; }
+
+.meteoro {
+  position: absolute;
+  background-color: #fff;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  transform: rotate(-35deg);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
+}
+
+.meteoro:before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+  width: 0;
+  height: 0;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-left: 85px solid white;
+  position: absolute;
+  left: 2px;
+  top: 0;
+}
+
+.meteoro.style1 { animation-name: meteoroStyle1; }
+.meteoro.style2 { animation-name: meteoroStyle2; }
+.meteoro.style3 { animation-name: meteoroStyle3; }
+.meteoro.style4 { animation-name: meteoroStyle4; }
+
+@keyframes escurecer {
+  0%   { top: 0; }
+  100% { top: 100%; }
+}
+
+@keyframes estrela {
+  0% {
+    box-shadow: 0 0 10px 0px rgba(255, 255, 255, 0.05);
+  }
+  50% {
+    box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 10px 0px rgba(255, 255, 255, 0.05);
+  }
+}
+
+@keyframes estrelaDestacada {
+  0% {
+    background-color: #FFFFFF;
+    box-shadow: 0 0 10px 0px rgba(255, 255, 255, 1);
+  }
+  20% {
+    background-color: #FFC4C4;
+    box-shadow: 0 0 10px 0px rgb(255, 196, 196, 1);
+  }
+  80% {
+    background-color: #C4CFFF;
+    box-shadow: 0 0 10px 0px rgb(196, 207, 255, 1);
+  }
+  100% {
+    background-color: #FFFFFF;
+    box-shadow: 0 0 10px 0px rgba(255, 255, 255, 0.2);
+  }
+}
+
+@keyframes meteoroStyle1 {
+  0% { opacity: 0; right: 300px; top: 100px; }
+  30% { opacity: .3; }
+  60% { opacity: .3; }
+  100% { opacity: 0; right: 1000px; top: 600px; }
+}
+
+@keyframes meteoroStyle2 {
+  0% { opacity: 0; right: 700px; top: 100px; }
+  30% { opacity: 1; }
+  60% { opacity: 1; }
+  100% { opacity: 0; right: 1400px; top: 600px; }
+}
+
+@keyframes meteoroStyle3 {
+  0% { opacity: 0; right: 300px; top: 300px; }
+  30% { opacity: 1; }
+  60% { opacity: 1; }
+  100% { opacity: 0; right: 1000px; top: 800px; }
+}
+
+@keyframes meteoroStyle4 {
+  0% { opacity: 0; right: 700px; top: 300px; }
+  30% { opacity: 1; }
+  60% { opacity: 1; }
+  100% { opacity: 0; right: 1400px; top: 800px; }
+}
+
+@keyframes rotate {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+</style>

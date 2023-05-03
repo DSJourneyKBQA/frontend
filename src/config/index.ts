@@ -4,6 +4,8 @@ export const baseURL = 'https://ds-web-api.amarea.cn'
 // export const baseURL = 'http://localhost:3000'
 export const imageUploadApiURL = 'https://img.amarea.cn/api/v1/upload'
 
+export const qaBaseURL = 'http://localhost:3001'
+
 export const frontendRepo = 'https://github.com/DSJourneyKBQA/frontend'
 export const backendRepo = 'https://github.com/DSJourneyKBQA/web-server'
 

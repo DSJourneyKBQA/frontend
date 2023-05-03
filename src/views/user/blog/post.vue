@@ -183,7 +183,7 @@ async function fetchData() {
     .then(([post, comment]) => {
       postData.value = post.post
       commentData.value = comment.comments
-      document.title = `${postData.value?.title} - ${postData.value?.user.nickname} - 分布式学习系统`
+      document.title = `${postData.value?.title} - ${postData.value?.user.nickname} - 分布式体验与学习平台`
     })
     .catch((err) => {
       toast.error(err.message)
