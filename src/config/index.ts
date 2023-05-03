@@ -83,11 +83,6 @@ export const adminSideBarItem = {
 
 }
 
-export const viewerConfig = {
-  fullscreen: true,
-  zoomRatio: 1,
-}
-
 export const itemTypeList = [
   { label: '网关服务器', value: ItemType.GatewayServer },
   { label: '配置服务器', value: ItemType.ConfigServer },

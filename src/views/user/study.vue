@@ -230,10 +230,13 @@ function drawBackground() {
     setTimeout(carregarMeteoro, numeroAleatorio)
     numeroAleatorio = getRandomArbitrary(5000, 10000)
     const meteoro = `<div class='meteoro ${style[getRandomArbitrary(0, 4)]}'></div>`
-    document.getElementsByClassName('chuvaMeteoro')[0].innerHTML = meteoro
-    setTimeout(() => {
-      document.getElementsByClassName('chuvaMeteoro')[0].innerHTML = ''
-    }, 1000)
+    const chuvaMeteoros = document.getElementsByClassName('.chuvaMeteoro')
+    if (chuvaMeteoros.length > 0) {
+      chuvaMeteoros[0].innerHTML = meteoro
+      setTimeout(() => {
+        chuvaMeteoros[0].innerHTML = ''
+      }, 1000)
+    }
   }
 }
 
@@ -365,17 +368,6 @@ function handleCompleteChapter() {
 </script>
 
 <style>
-.title {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  top: 50%;
-  color: #ffffff;
-  font-weight: 100;
-  font-size: 3em;
-  font-family: 'Pacifico', cursive;
-}
-
 .noite {
   background: -webkit-linear-gradient(top, rgb(0, 0, 0) 50%, rgb(25, 19, 39)80%, rgb(43, 32, 72));
   width: 100%;
