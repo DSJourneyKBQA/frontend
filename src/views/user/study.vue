@@ -145,6 +145,7 @@ import { useStore } from '@/store'
 import type { ChapterContentData, ChapterData, TestData, TestResultData } from '@/types'
 import { formatTime, parseTest, renderMarkdown } from '@/utils'
 import { qaBaseURL } from '@/config'
+import router from '@/router'
 
 const store = useStore()
 const toast = useToast()
@@ -176,10 +177,6 @@ const data = {
 const options: VisOption = {
   nodes: {
     shape: 'image',
-    // color: {
-    //   background: '#3b82f6',
-    //   border: '#444c56',
-    // },
     font: {
       color: '#fff',
     },
@@ -201,6 +198,7 @@ const options: VisOption = {
   },
 }
 const _nodeNames: string[] = []
+let _nodeList: any[] = []
 
 onMounted(async () => {
   fetchData()
@@ -208,7 +206,39 @@ onMounted(async () => {
   if (container)
     network = new Network(container, data, options)
   network?.on('click', (properties) => {
-    toast.info(JSON.stringify(properties.nodes))
+    if (properties.nodes.length > 0) {
+      const clickNode = properties.nodes[0]
+      if (_nodeList[clickNode].type === 'main' || _nodeList[clickNode].type === 'sub') {
+        getRoadmapData(_nodeList[clickNode].name)
+          .then((res) => {
+            const _nodes: any[] = res.data.data.nodes
+            const _rels: any[] = res.data.data.rels
+            const addNodes: any[] = []
+            _nodes.forEach((node) => {
+              if (!_nodeNames.includes(node.name)) {
+                _nodeNames.push(node.name)
+                _nodeList.push(node)
+                addNodes.push({
+                  id: _nodeNames.length,
+                  label: node.name,
+                  image: `/star.${node.type}.png`,
+                  size: (node.type === 'article' ? 10 : 20),
+                })
+              }
+            })
+            nodes.add(addNodes as never[])
+            _rels.forEach((rel) => {
+              edges.add([{
+                from: _nodeNames.indexOf(rel.start),
+                to: _nodeNames.indexOf(rel.end),
+                value: 2,
+              }] as never[])
+            })
+          })
+      }
+      if (_nodeNames[clickNode].startsWith('article'))
+        router.push(`/blog/post/${_nodeNames[clickNode].split('_')[1]}`)
+    }
   })
   drawBackground()
 })
@@ -279,12 +309,13 @@ function fetchData() {
       const _nodes: any[] = res.data.data.nodes
       const _rels: any[] = res.data.data.rels
       const addNodes: any[] = []
-
+      _nodeList = res.data.data.nodes
       _nodes.forEach((node, index) => {
         addNodes.push({
           id: index,
           label: node.name,
           image: `/star.${node.type}.png`,
+          size: (node.type === 'article' ? 10 : 20),
         })
         _nodeNames.push(node.name)
       })
@@ -309,8 +340,8 @@ function fetchData() {
     })
 }
 
-async function getRoadmapData() {
-  return axios.get(`${qaBaseURL}/api/roadmap`)
+async function getRoadmapData(entity: string | null = null) {
+  return axios.get(`${qaBaseURL}/api/roadmap${entity ? `/${entity}` : ''}`)
 }
 
 function handleChapterData(data: any): ChapterData[] {

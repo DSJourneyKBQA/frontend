@@ -891,10 +891,9 @@ function connectGateway() {
 
 function disconnectGateway() {
   const gateway = items.value.find(ele => ele.type === ItemType.GatewayServer)
-  if (!gateway) {
-    toast.info('请先添加网关服务')
+  if (!gateway)
     return
-  }
+
   setTimeout(() => {
     items.value.forEach((item) => {
       item.status = 0
