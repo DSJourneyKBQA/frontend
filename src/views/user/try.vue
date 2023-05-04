@@ -162,7 +162,7 @@
         <div v-if="items[selectIndex].type === ItemType.ConfigServer">
           <div class="rounded-md border border-github p-2 my-1">
             <div class="mb-2">
-              地址：<input v-model=" items[selectIndex].address" type="text" class="bg-transparent px-2 rounded-md border border-github">
+              端口号：<input v-model.number="items[selectIndex].port" type="text" class="bg-transparent px-2 rounded-md border border-github">
             </div>
             <div>
               ID：<input v-model=" items[selectIndex].sid " type="text" class="bg-transparent px-2 rounded-md border border-github">
@@ -180,7 +180,7 @@
                 </div>
                 <div class="px-2 py-1">
                   <div v-for=" server, index in storageServers.filter(ele => ele.gid === gid) " :key=" index ">
-                    {{ server.address }}
+                    {{ server.port }}
                   </div>
                 </div>
               </div>
@@ -219,7 +219,7 @@
         <div v-if="items[selectIndex].type === ItemType.StorageServer">
           <div class="rounded-md border border-github p-2 my-1">
             <div class="mb-2">
-              地址：<input v-model=" items[selectIndex].address " type="text" class="bg-transparent px-2 rounded-md border border-github">
+              端口号：<input v-model.number="items[selectIndex].port" type="text" class="bg-transparent px-2 rounded-md border border-github">
             </div>
             <div class="mb-2">
               Group：<select
@@ -384,10 +384,12 @@ onMounted(() => {
     serviceLogs.value = serviceLogs.value.slice(-100)
     raftLogs.value = raftLogs.value.slice(-100)
   }, 1000 * 5)
+  document.addEventListener('keydown', handleKeyDown)
 })
 
 onUnmounted(() => {
   disconnectGateway()
+  document.removeEventListener('keydown', handleKeyDown)
 })
 
 watchEffect(() => {
@@ -399,6 +401,13 @@ watchEffect(() => {
 })
 
 // 画布相关函数
+
+function handleKeyDown(e: KeyboardEvent): void {
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (document.activeElement?.tagName === 'BODY')
+      deleteSelectedItems()
+  }
+}
 
 function addItem(type: ItemType, initPosition: { x: number; y: number } = { x: 5, y: 5 }): boolean {
   if (type === ItemType.GatewayServer) {
@@ -424,6 +433,7 @@ function addItem(type: ItemType, initPosition: { x: number; y: number } = { x: 5
     },
     select: false,
     address: '',
+    port: -1,
     sid: -1,
     gid: -1,
   }
@@ -433,11 +443,11 @@ function addItem(type: ItemType, initPosition: { x: number; y: number } = { x: 5
       break
     case ItemType.ConfigServer:
       config.sid = configServers.value.length
-      config.address = '127.0.0.1:9088'
+      config.port = 9000 + configServers.value.length
       break
     case ItemType.StorageServer:
       config.sid = storageServers.value.length
-      config.address = '127.0.0.1:9188'
+      config.port = 9100 + config.sid
       config.gid = 1
       break
     case ItemType.Client:
@@ -914,7 +924,7 @@ function startService(id: string) {
     return
   }
   if (item.type === ItemType.ConfigServer) {
-    const cfg_addrs = configServers.value.map(ele => ele.address).join(',')
+    const cfg_addrs = configServers.value.map(ele => `127.0.0.1:${ele.port}`).join(',')
     gatewayStartService(`http://${gateway.address}`, -1, item.sid, 'configserver', cfg_addrs, undefined)
       .then(() => {
         toast.success('发送启动请求成功')
@@ -925,8 +935,8 @@ function startService(id: string) {
     return
   }
   if (item.type === ItemType.StorageServer) {
-    const cfg_addrs = configServers.value.map(ele => ele.address).join(',')
-    const shared_addrs = storageServers.value.filter(ele => ele.gid === item.gid).map(ele => ele.address).join(',')
+    const cfg_addrs = configServers.value.map(ele => `127.0.0.1:${ele.port}`).join(',')
+    const shared_addrs = storageServers.value.filter(ele => ele.gid === item.gid).map(ele => `127.0.0.1:${ele.port}`).join(',')
     gatewayStartService(`http://${gateway.address}`, item.gid, item.sid, 'sharedserver', cfg_addrs, shared_addrs)
       .then(() => {
         toast.success('发送启动请求成功')
@@ -988,7 +998,7 @@ function setGroupInfo() {
   }
 
   for (const group of groupList.value) {
-    const shared_addrs = storageServers.value.filter(ele => ele.gid === group).map(ele => ele.address).join(',')
+    const shared_addrs = storageServers.value.filter(ele => ele.gid === group).map(ele => `127.0.0.1:${ele.port}`).join(',')
     setGroup(`http://${gateway.address}`, group, shared_addrs)
       .then(() => {
         toast.success('发送分组请求成功')

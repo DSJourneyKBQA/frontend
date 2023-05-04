@@ -142,6 +142,7 @@ export interface CanvasItem {
   }
   select: boolean
   address: string
+  port: number
   sid: number
   gid: number
 }
