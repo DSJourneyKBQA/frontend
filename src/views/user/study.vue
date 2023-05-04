@@ -146,6 +146,7 @@ import type { ChapterContentData, ChapterData, TestData, TestResultData } from '
 import { formatTime, parseTest, renderMarkdown } from '@/utils'
 import { qaBaseURL } from '@/config'
 import router from '@/router'
+import { getPostTitle } from '@/api/post'
 
 const store = useStore()
 const toast = useToast()
@@ -198,6 +199,7 @@ const options: VisOption = {
   },
 }
 const _nodeNames: string[] = []
+const _relNames: string[] = []
 let _nodeList: any[] = []
 
 onMounted(async () => {
@@ -214,26 +216,38 @@ onMounted(async () => {
             const _nodes: any[] = res.data.data.nodes
             const _rels: any[] = res.data.data.rels
             const addNodes: any[] = []
-            _nodes.forEach((node) => {
-              if (!_nodeNames.includes(node.name)) {
-                _nodeNames.push(node.name)
-                _nodeList.push(node)
-                addNodes.push({
-                  id: _nodeNames.length,
-                  label: node.name,
-                  image: `/star.${node.type}.png`,
-                  size: (node.type === 'article' ? 10 : 20),
+            if (_nodes.length === 0)
+              return
+
+            const pids = _nodes.map(item => Number(item.name.split('_')[1])).join(',')
+            getPostTitle(pids)
+              .then((res: any) => {
+                const postTitle: any[] = res.postTitle
+                _nodes.forEach((node) => {
+                  if (!_nodeNames.includes(node.name)) {
+                    _nodeNames.push(node.name)
+                    _nodeList.push(node)
+                    addNodes.push({
+                      id: _nodeNames.length - 1,
+                      label: postTitle.find(item => item.pid === Number(node.name.split('_')[1]))?.title || node.name,
+                      image: `/star.${node.type}.png`,
+                      size: (node.type === 'article' ? 10 : 20),
+                    })
+                  }
                 })
-              }
-            })
-            nodes.add(addNodes as never[])
-            _rels.forEach((rel) => {
-              edges.add([{
-                from: _nodeNames.indexOf(rel.start),
-                to: _nodeNames.indexOf(rel.end),
-                value: 2,
-              }] as never[])
-            })
+                nodes.add(addNodes as never[])
+                _rels.forEach((rel) => {
+                  const relName = `${rel.type}_${rel.start}_${rel.end}`
+                  if (_relNames.includes(relName))
+                    return
+                  edges.add([{
+                    from: _nodeNames.indexOf(rel.start),
+                    to: _nodeNames.indexOf(rel.end),
+                    value: 2,
+                  }] as never[])
+                  _relNames.push(relName)
+                })
+              })
           })
       }
       if (_nodeNames[clickNode].startsWith('article'))
@@ -322,6 +336,9 @@ function fetchData() {
       nodes.add(addNodes as never[])
 
       for (const rel of _rels) {
+        const relName = `${rel.type}_${rel.start}_${rel.end}`
+        if (_relNames.includes(relName))
+          continue
         if (rel.type === 'require') {
           edges.add([{
             from: _nodeNames.indexOf(rel.end),
@@ -336,6 +353,7 @@ function fetchData() {
             value: 2,
           }] as never[])
         }
+        _relNames.push(relName)
       }
     })
 }

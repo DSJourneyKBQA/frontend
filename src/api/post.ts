@@ -111,3 +111,13 @@ export function cancelLike(token: string, type: string, sid: number) {
     },
   })
 }
+
+export function getPostTitle(pids: string) {
+  return request({
+    url: '/post/getPostTitle',
+    method: 'get',
+    params: {
+      pids,
+    },
+  })
+}
