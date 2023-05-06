@@ -3,7 +3,7 @@
     <AdminNav />
     <div class="flex w-full">
       <AdminSideBar />
-      <div class="w-full p-6 h-[calc(100vh-60px)] overflow-y-auto">
+      <div class="w-full p-6 h-[calc(100vh-60px)] overflow-x-hidden overflow-y-auto">
         <RouterView v-slot="{ Component }">
           <Transition name="page-in">
             <component :is="Component" />

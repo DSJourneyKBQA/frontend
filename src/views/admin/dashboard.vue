@@ -3,15 +3,28 @@
     <p class="mb-4 text-2xl font-bold">
       仪表盘
     </p>
-    <div v-if="dashboardData">
-      <p>用户总数：{{ dashboardData.userCount }}</p>
-      <p>文章总数：{{ dashboardData.postCount }}</p>
-      <p>评论总数：{{ dashboardData.commentCount }}</p>
-      <p>
-        最新注册用户：{{ dashboardData.latestUser.nickname }}({{ dashboardData.latestUser.name }})，uid: {{
-          dashboardData.latestUser.uid
-        }}，注册时间：{{ formatTime(dashboardData.latestUser.createdAt) }}
-      </p>
+    <div v-if="dashboardData" class="flex flex-wrap gap-6">
+      <div class="flex-1 flex flex-col items-center justify-center min-w-[300px] h-[150px] rounded-lg text-2xl hover:scale-105 transition-all bg-red-200">
+        <div>用户总数</div>
+        <div>{{ dashboardData.userCount }}</div>
+      </div>
+      <div class="flex-1 flex flex-col items-center justify-center min-w-[300px] h-[150px] rounded-lg text-2xl hover:scale-105 transition-all bg-green-200">
+        <div>文章总数</div>
+        <div>{{ dashboardData.postCount }}</div>
+      </div>
+      <div class="flex-1 flex flex-col items-center justify-center min-w-[300px] h-[150px] rounded-lg text-2xl hover:scale-105 transition-all bg-blue-200">
+        <div> 评论总数</div>
+        <div>{{ dashboardData.commentCount }}</div>
+      </div>
+      <div class="flex-1 flex flex-col items-center justify-center min-w-[300px] h-[150px] rounded-lg text-2xl hover:scale-105 transition-all bg-yellow-200">
+        <div>最新注册用户</div>
+        <div class="text-base">
+          {{ dashboardData.latestUser.nickname }}({{ dashboardData.latestUser.name }})[{{ dashboardData.latestUser.uid }}]
+        </div>
+        <div class="text-base">
+          {{ formatTime(dashboardData.latestUser.createdAt) }}
+        </div>
+      </div>
     </div>
   </div>
 </template>

@@ -236,9 +236,12 @@
             </div>
           </div>
           <div class="rounded-md border border-github p-2 my-1">
+            <div v-for="item in groupStorageData" :key="item.bucket + item.key">
+              bucket: {{ item.bucket }}，key: {{ item.key }}，value: {{ item.value }}
+            </div>
             <button
               class="border px-2 py-0.5 mr-2 bg-gh-btn hover:bg-gh-btn-hover border-gh-btn hover:border-gh-btn-hover rounded-md"
-              @click="queryBucketsContent"
+              @click="queryBucketsContent(items[selectIndex].gid)"
             >
               查询
             </button>
@@ -338,14 +341,23 @@ const clientConfig = ref({
 const serviceLogEl = ref<HTMLDivElement>()
 const raftLogEl = ref<HTMLDivElement>()
 const canvasEl = ref<HTMLDivElement>()
+const groupStorageData = ref<{
+  bucket: string
+  key: string
+  value: string
+}[]>([])
 
 const selectedItems = computed(() => items.value.filter(item => item.select))
 const selectIndex = computed(() => {
-  if (selectedItems.value.length === 1)
-    return items.value.findIndex(item => item.id === selectedItems.value[0].id)
+  if (selectedItems.value.length === 1) {
+    const idx = items.value.findIndex(item => item.id === selectedItems.value[0].id)
+    if (items.value[idx].type === ItemType.StorageServer)
+      queryBucketsContent(items.value[idx].gid)
 
-  else
-    return -1
+    return idx
+  }
+
+  else { return -1 }
 })
 const showInfoPanel = computed(() => selectIndex.value !== -1)
 const configServers = computed(() => items.value.filter(item => item.type === ItemType.ConfigServer))
@@ -1050,20 +1062,36 @@ function getStorageKv() {
     })
 }
 
-function queryBucketsContent() {
+function queryBucketsContent(gid: number) {
   const gateway = items.value.find(ele => ele.type === ItemType.GatewayServer)
   if (!gateway) {
     toast.info('请先添加网关服务')
     return
   }
 
-  const gid = items.value[selectIndex.value].gid
   queryBuckets(`http://${gateway.address}`, gid, Array.from({ length: 15 }, (_, i) => i).join(','))
     .then((res: any) => {
-      toast.success(res.data)
+      try {
+        const data = JSON.parse(atob(res.data.Msg))
+        groupStorageData.value = []
+        for (const i in data) {
+          for (const j in data[i]) {
+            const key = j.split('_')[1]
+            groupStorageData.value.push({
+              bucket: i,
+              key,
+              value: data[i][j],
+            })
+          }
+        }
+      }
+      catch (e) {
+        console.error(e)
+        toast.error('解析返回数据失败')
+      }
     })
     .catch(() => {
-      toast.error('发送请求失败')
+      toast.error('查询请求失败')
     })
 }
 </script>
